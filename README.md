@@ -33,6 +33,19 @@ Operations admin portal for **Where The Vibes At**.
 - `stripe-create-payout` — complete withdrawals in Stripe
 - Store Stripe **secret** in Supabase secrets only
 
+## Deploy on Vercel
+
+Import [github.com/Wherethevibesat/web-app-admin](https://github.com/Wherethevibesat/web-app-admin), then under **Settings → Environment Variables** add (all environments: Production, Preview, Development):
+
+| Variable | Required |
+|----------|----------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes (admin APIs + role sync) |
+| `NEXT_PUBLIC_SITE_URL` | Yes — e.g. `https://web-app-admin-nine.vercel.app` or your custom domain |
+
+Redeploy after saving env vars. If they are missing, the app shows `/configuration-error` instead of a 500.
+
 ## Related
 
 - Flutter: `c:\src\thisishtx`

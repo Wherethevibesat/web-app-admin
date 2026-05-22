@@ -1,13 +1,39 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getSupabasePublicEnv } from "@/lib/supabase/env";
+
+const CONFIG_PATH = "/configuration-error";
+
+function isAuthRoute(pathname: string) {
+  return pathname.startsWith("/auth") || pathname === "/auth/callback";
+}
+
+function redirectToConfig(request: NextRequest) {
+  const url = request.nextUrl.clone();
+  url.pathname = CONFIG_PATH;
+  url.search = "";
+  return NextResponse.redirect(url);
+}
 
 export async function updateSession(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  if (pathname === CONFIG_PATH) {
+    return NextResponse.next({ request });
+  }
+
+  const env = getSupabasePublicEnv();
+  if (!env) {
+    if (isAuthRoute(pathname)) {
+      return NextResponse.next({ request });
+    }
+    return redirectToConfig(request);
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+  try {
+    const supabase = createServerClient(env.url, env.anonKey, {
       cookies: {
         getAll() {
           return request.cookies.getAll();
@@ -22,31 +48,31 @@ export async function updateSession(request: NextRequest) {
           );
         },
       },
-    },
-  );
+    });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  const pathname = request.nextUrl.pathname;
-  const isAuthRoute =
-    pathname.startsWith("/auth") || pathname === "/auth/callback";
+    if (!user && !isAuthRoute(pathname)) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/auth/login";
+      url.searchParams.set("next", pathname);
+      return NextResponse.redirect(url);
+    }
 
-  if (!user && !isAuthRoute) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
-    url.searchParams.set("next", pathname);
-    return NextResponse.redirect(url);
+    if (user && pathname.startsWith("/auth/login")) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
+
+    return supabaseResponse;
+  } catch (err) {
+    console.error("[middleware] session update failed:", err);
+    if (isAuthRoute(pathname)) {
+      return NextResponse.next({ request });
+    }
+    return redirectToConfig(request);
   }
-
-  if (user && pathname.startsWith("/auth/login")) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
-  }
-
-  // Admin role is checked in (admin)/layout.tsx (Node) so SUPABASE_SERVICE_ROLE_KEY works.
-
-  return supabaseResponse;
 }
