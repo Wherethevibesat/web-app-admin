@@ -9,7 +9,7 @@ Operations admin portal for **Where The Vibes At**.
 1. Copy `.env.example` → `.env.local` (include `SUPABASE_SERVICE_ROLE_KEY`)
 2. Run SQL migrations in Supabase (in order):
    - From Flutter repo: `000_full_database.sql`, `003_business_verification.sql`
-   - From this repo: `004_web_platform.sql`, `005_stripe_and_withdrawals.sql`
+   - From this repo: `004_web_platform.sql`, `005_stripe_and_withdrawals.sql`, `007_neighborhoods.sql`
 3. `npm run dev` → http://localhost:3000
 
 ## Admin features
@@ -18,6 +18,7 @@ Operations admin portal for **Where The Vibes At**.
 |------|----------------|
 | Dashboard | Live KPIs |
 | Venues | Full CRUD, feature, verification status |
+| Neighborhoods | Houston areas for customer browse/search (multi-city ready) |
 | Events | Full CRUD |
 | VIP Packages | Full CRUD |
 | Users | List, search, edit, delete, change roles (audit log) |

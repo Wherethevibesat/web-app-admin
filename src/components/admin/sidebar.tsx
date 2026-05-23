@@ -12,6 +12,7 @@ import {
   FileCheck,
   LayoutDashboard,
   LogOut,
+  MapPin,
   Settings,
   Star,
   Users,
@@ -24,6 +25,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/venues", label: "Venues", icon: Building2 },
+  { href: "/neighborhoods", label: "Neighborhoods", icon: MapPin },
   { href: "/events", label: "Events", icon: Calendar },
   { href: "/users", label: "Users", icon: Users },
   { href: "/submissions", label: "Submissions", icon: FileCheck },
