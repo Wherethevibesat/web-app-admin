@@ -13,13 +13,16 @@ export interface EventFormData {
 }
 
 export const EVENT_TYPES = [
-  "Party",
-  "DJ Set",
-  "Live Music",
-  "Brunch",
+  "Day Party",
+  "Night Party",
+  "After Hours",
+  "Brunch / Daytime",
+  "Live Music / DJ",
   "Private Event",
   "Other",
 ] as const;
+
+export const DEFAULT_EVENT_TYPE = "Night Party" as const;
 
 export const EVENT_STATUSES = [
   "draft",

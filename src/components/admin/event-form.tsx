@@ -9,6 +9,7 @@ import type { EventRow } from "@/lib/types/database";
 import type { NeighborhoodRow } from "@/lib/types/neighborhood";
 import {
   EVENT_STATUSES,
+  DEFAULT_EVENT_TYPE,
   EVENT_TYPES,
   type EventFormData,
 } from "@/lib/types/event";
@@ -27,7 +28,7 @@ function toForm(event?: EventRow | null): EventFormData {
     venue_id: event?.venue_id ?? "",
     title: event?.title ?? "",
     description: event?.description ?? "",
-    event_type: event?.event_type ?? "Party",
+    event_type: event?.event_type ?? DEFAULT_EVENT_TYPE,
     neighborhood: event?.neighborhood ?? "",
     starts_at: toLocalDatetime(event?.starts_at) || toLocalDatetime(new Date().toISOString()),
     ends_at: toLocalDatetime(event?.ends_at),
