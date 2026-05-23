@@ -2,9 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { NeighborhoodSelect } from "@/components/admin/neighborhood-select";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select, Textarea } from "@/components/ui/input";
 import type { EventRow } from "@/lib/types/database";
+import type { NeighborhoodRow } from "@/lib/types/neighborhood";
 import {
   EVENT_STATUSES,
   EVENT_TYPES,
@@ -38,9 +40,11 @@ function toForm(event?: EventRow | null): EventFormData {
 export function EventForm({
   event,
   venues,
+  neighborhoods,
 }: {
   event?: EventRow | null;
   venues: VenueRow[];
+  neighborhoods: NeighborhoodRow[];
 }) {
   const router = useRouter();
   const [form, setForm] = useState(() => toForm(event));
@@ -105,7 +109,12 @@ export function EventForm({
       </div>
       <div>
         <Label htmlFor="neighborhood">Neighborhood</Label>
-        <Input id="neighborhood" value={form.neighborhood} onChange={(e) => update("neighborhood", e.target.value)} />
+        <NeighborhoodSelect
+          id="neighborhood"
+          value={form.neighborhood}
+          onChange={(value) => update("neighborhood", value)}
+          neighborhoods={neighborhoods}
+        />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
