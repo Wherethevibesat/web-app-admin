@@ -83,6 +83,8 @@ export function UsersTable({ users }: { users: UserProfile[] }) {
               >
                 <option value="customer">Customer</option>
                 <option value="venueOwner">Venue owner</option>
+                <option value="driver">Driver</option>
+                <option value="promoter">Promoter</option>
                 <option value="admin">Admin</option>
               </Select>
             </DataTableCell>

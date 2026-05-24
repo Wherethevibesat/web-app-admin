@@ -16,6 +16,7 @@ import {
 import type { VenueRow } from "@/lib/types/venue";
 import type { EventRow } from "@/lib/types/database";
 import type { DriverCompanySubmission } from "@/lib/admin/drivers";
+import type { PromoterLinkSubmission } from "@/lib/admin/promoters";
 import { EventReviewActions } from "@/components/admin/event-review-actions";
 import { TableCheckbox } from "@/components/ui/table-checkbox";
 import {
@@ -28,12 +29,16 @@ export function SubmissionsTabs({
   venues,
   events,
   drivers,
+  promoterLinks,
+  promoterEvents,
   tab,
 }: {
   venues: VenueRow[];
   events: EventRow[];
   drivers: DriverCompanySubmission[];
-  tab: "venues" | "events" | "drivers";
+  promoterLinks: PromoterLinkSubmission[];
+  promoterEvents: Record<string, unknown>[];
+  tab: "venues" | "events" | "drivers" | "promoters";
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
@@ -57,6 +62,28 @@ export function SubmissionsTabs({
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "published", published: true }),
+    });
+    setBusy(null);
+    router.refresh();
+  }
+
+  async function reviewPromoterLink(id: string, status: "approved" | "rejected") {
+    setBusy(id);
+    await fetch(`/api/admin/promoter-links/${id}/patch`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+    setBusy(null);
+    router.refresh();
+  }
+
+  async function reviewPromoterEvent(id: string, approval: "approved" | "rejected") {
+    setBusy(id);
+    await fetch(`/api/admin/promoter-events/${id}/patch`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ approval, publish: approval === "approved" }),
     });
     setBusy(null);
     router.refresh();
@@ -94,6 +121,16 @@ export function SubmissionsTabs({
           }`}
         >
           Drivers ({drivers.length})
+        </Link>
+        <Link
+          href="/submissions?tab=promoters"
+          className={`px-4 py-2 text-sm font-medium ${
+            tab === "promoters"
+              ? "border-b-2 border-foreground text-foreground"
+              : "text-wtva-muted"
+          }`}
+        >
+          Promoters ({promoterLinks.length + promoterEvents.length})
         </Link>
       </div>
 
@@ -198,43 +235,147 @@ export function SubmissionsTabs({
             </DataTable>
           </>
         )
-      ) : drivers.length === 0 ? (
-        <p className="text-wtva-muted">No pending driver listings.</p>
+      ) : tab === "drivers" ? (
+        drivers.length === 0 ? (
+          <p className="text-wtva-muted">No pending driver listings.</p>
+        ) : (
+          <DataTable>
+            <DataTableHead>
+              <tr>
+                <DataTableHeaderCell>Company</DataTableHeaderCell>
+                <DataTableHeaderCell>City</DataTableHeaderCell>
+                <DataTableHeaderCell>Email</DataTableHeaderCell>
+                <DataTableHeaderCell>Listing expires</DataTableHeaderCell>
+                <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
+              </tr>
+            </DataTableHead>
+            <DataTableBody>
+              {drivers.map((d) => (
+                <DataTableRow key={d.id}>
+                  <DataTableCell>{d.company_name}</DataTableCell>
+                  <DataTableCell>{d.city ?? "-"}</DataTableCell>
+                  <DataTableCell>{d.contact_email ?? "-"}</DataTableCell>
+                  <DataTableCell>
+                    {d.listing_expires_at
+                      ? new Date(d.listing_expires_at).toLocaleDateString()
+                      : "-"}
+                  </DataTableCell>
+                  <DataTableCell className="text-right">
+                    <Button
+                      disabled={busy === d.id}
+                      className="px-3 py-1 text-xs"
+                      onClick={() => publishDriver(d.id)}
+                    >
+                      Approve & publish
+                    </Button>
+                  </DataTableCell>
+                </DataTableRow>
+              ))}
+            </DataTableBody>
+          </DataTable>
+        )
+      ) : promoterLinks.length === 0 && promoterEvents.length === 0 ? (
+        <p className="text-wtva-muted">No pending promoter submissions.</p>
       ) : (
-        <DataTable>
-          <DataTableHead>
-            <tr>
-              <DataTableHeaderCell>Company</DataTableHeaderCell>
-              <DataTableHeaderCell>City</DataTableHeaderCell>
-              <DataTableHeaderCell>Email</DataTableHeaderCell>
-              <DataTableHeaderCell>Listing expires</DataTableHeaderCell>
-              <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
-            </tr>
-          </DataTableHead>
-          <DataTableBody>
-            {drivers.map((d) => (
-              <DataTableRow key={d.id}>
-                <DataTableCell>{d.company_name}</DataTableCell>
-                <DataTableCell>{d.city ?? "-"}</DataTableCell>
-                <DataTableCell>{d.contact_email ?? "-"}</DataTableCell>
-                <DataTableCell>
-                  {d.listing_expires_at
-                    ? new Date(d.listing_expires_at).toLocaleDateString()
-                    : "-"}
-                </DataTableCell>
-                <DataTableCell className="text-right">
-                  <Button
-                    disabled={busy === d.id}
-                    className="px-3 py-1 text-xs"
-                    onClick={() => publishDriver(d.id)}
-                  >
-                    Approve & publish
-                  </Button>
-                </DataTableCell>
-              </DataTableRow>
-            ))}
-          </DataTableBody>
-        </DataTable>
+        <div className="space-y-10">
+          {promoterLinks.length > 0 && (
+            <section>
+              <h2 className="mb-3 font-semibold">Venue access requests</h2>
+              <DataTable>
+                <DataTableHead>
+                  <tr>
+                    <DataTableHeaderCell>Promoter</DataTableHeaderCell>
+                    <DataTableHeaderCell>Venue</DataTableHeaderCell>
+                    <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
+                  </tr>
+                </DataTableHead>
+                <DataTableBody>
+                  {promoterLinks.map((l) => (
+                    <DataTableRow key={l.id}>
+                      <DataTableCell>
+                        {l.promoter?.name ?? "-"}
+                        <br />
+                        <span className="text-xs text-wtva-muted">{l.promoter?.email}</span>
+                      </DataTableCell>
+                      <DataTableCell>{l.venue?.name ?? l.venue_id}</DataTableCell>
+                      <DataTableCell className="text-right space-x-2">
+                        <Button
+                          disabled={busy === l.id}
+                          className="px-3 py-1 text-xs"
+                          onClick={() => reviewPromoterLink(l.id, "approved")}
+                        >
+                          Approve
+                        </Button>
+                        <Button
+                          disabled={busy === l.id}
+                          variant="ghost"
+                          className="px-3 py-1 text-xs"
+                          onClick={() => reviewPromoterLink(l.id, "rejected")}
+                        >
+                          Reject
+                        </Button>
+                      </DataTableCell>
+                    </DataTableRow>
+                  ))}
+                </DataTableBody>
+              </DataTable>
+            </section>
+          )}
+          {promoterEvents.length > 0 && (
+            <section>
+              <h2 className="mb-3 font-semibold">Promoter-created events</h2>
+              <DataTable>
+                <DataTableHead>
+                  <tr>
+                    <DataTableHeaderCell>Event</DataTableHeaderCell>
+                    <DataTableHeaderCell>Venue</DataTableHeaderCell>
+                    <DataTableHeaderCell>Date</DataTableHeaderCell>
+                    <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
+                  </tr>
+                </DataTableHead>
+                <DataTableBody>
+                  {promoterEvents.map((e) => {
+                    const ev = e as {
+                      id: string;
+                      title: string;
+                      starts_at: string;
+                      venue?: { name: string } | { name: string }[];
+                    };
+                    const venueName = Array.isArray(ev.venue)
+                      ? ev.venue[0]?.name
+                      : ev.venue?.name;
+                    return (
+                      <DataTableRow key={ev.id}>
+                        <DataTableCell>{ev.title}</DataTableCell>
+                        <DataTableCell>{venueName ?? "-"}</DataTableCell>
+                        <DataTableCell>
+                          {new Date(ev.starts_at).toLocaleString()}
+                        </DataTableCell>
+                        <DataTableCell className="text-right space-x-2">
+                          <Button
+                            disabled={busy === ev.id}
+                            className="px-3 py-1 text-xs"
+                            onClick={() => reviewPromoterEvent(ev.id, "approved")}
+                          >
+                            Approve & publish
+                          </Button>
+                          <Button
+                            disabled={busy === ev.id}
+                            variant="ghost"
+                            className="px-3 py-1 text-xs"
+                            onClick={() => reviewPromoterEvent(ev.id, "rejected")}
+                          >
+                            Reject
+                          </Button>
+                        </DataTableCell>
+                      </DataTableRow>
+                    );
+                  })}
+                </DataTableBody>
+              </DataTable>
+            </section>
+          )}
+        </div>
       )}
     </div>
   );

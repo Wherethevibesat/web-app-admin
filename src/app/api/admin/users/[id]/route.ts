@@ -20,7 +20,7 @@ export async function PATCH(
     role?: UserRole;
   };
 
-  if (body.role && !["customer", "venueOwner", "admin"].includes(body.role)) {
+  if (body.role && !["customer", "venueOwner", "admin", "driver", "promoter"].includes(body.role)) {
     return NextResponse.json({ error: "Invalid role" }, { status: 400 });
   }
 

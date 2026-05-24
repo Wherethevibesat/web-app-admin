@@ -1,0 +1,301 @@
+[
+  {
+    "name": "Bar 5015",
+    "slugKey": "5015",
+    "address": "5015 Almeda Rd, Houston, TX 77004",
+    "neighborhood": "Third Ward",
+    "phone": "(713) 515-8688",
+    "venue_type": "Bar"
+  },
+  {
+    "name": "Chapman & Kirby",
+    "slugKey": "chapman-kirby",
+    "address": "2118 Lamar St, Houston, TX 77003",
+    "neighborhood": "EaDo (East Downtown)",
+    "phone": "(713) 636-9615",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Lounge 2727",
+    "slugKey": "lounge-2727",
+    "address": "2727 Fondren Rd, Houston, TX 77063",
+    "neighborhood": "Galleria/Uptown",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Dome Nightclub",
+    "slugKey": "dome",
+    "address": "1720 Main St, Houston, TX 77002",
+    "neighborhood": "Downtown",
+    "phone": "(832) 504-4979",
+    "venue_type": "Nightclub"
+  },
+  {
+    "name": "Sekai Night & Day",
+    "slugKey": "sekai",
+    "address": "1505 St Emanuel St, Houston, TX 77003",
+    "neighborhood": "EaDo (East Downtown)",
+    "venue_type": "Nightclub"
+  },
+  {
+    "name": "DND HTX",
+    "slugKey": "dnd",
+    "address": "5920 Richmond Ave, Houston, TX 77057",
+    "neighborhood": "Galleria/Uptown",
+    "phone": "(832) 501-1196",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Bar P10",
+    "slugKey": "p10",
+    "address": "6213 Richmond Ave, Houston, TX 77057",
+    "neighborhood": "Galleria/Uptown",
+    "phone": "(832) 586-3196",
+    "venue_type": "Bar"
+  },
+  {
+    "name": "D-Bar",
+    "slugKey": "d-bar",
+    "address": "4409 Emancipation Ave, Houston, TX 77004",
+    "neighborhood": "Third Ward",
+    "phone": "(713) 443-6526",
+    "venue_type": "Bar"
+  },
+  {
+    "name": "Pour Behavior",
+    "slugKey": "pour-behavior",
+    "address": "2211 Travis St, Houston, TX 77002",
+    "neighborhood": "Midtown",
+    "phone": "(833) 623-4283",
+    "venue_type": "Nightclub"
+  },
+  {
+    "name": "Privilege Rooftop Lounge",
+    "slugKey": "privilege",
+    "address": "808 Anita St, Houston, TX 77006",
+    "neighborhood": "Midtown",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Seaside Lounge HTX",
+    "slugKey": "seaside",
+    "address": "702 W Dallas St, Houston, TX 77019",
+    "neighborhood": "Fourth Ward",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "KAMP Houston",
+    "slugKey": "kamp",
+    "address": "6025 Westheimer Rd, Houston, TX 77057",
+    "neighborhood": "Galleria/Uptown",
+    "phone": "(713) 360-6927",
+    "venue_type": "Restaurant"
+  },
+  {
+    "name": "A'dor Almeda",
+    "slugKey": "ador-almeda",
+    "address": "4830 Almeda Rd, Houston, TX 77004",
+    "neighborhood": "Third Ward",
+    "phone": "(281) 753-1498",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "XO Sky Lounge",
+    "slugKey": "xo-lounge",
+    "address": "5023 Washington Ave, Floor 2, Houston, TX 77007",
+    "neighborhood": "Washington Avenue",
+    "phone": "(832) 546-6955",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Styx & Stone",
+    "slugKey": "styx-stone",
+    "address": "2400 Brazos St, Houston, TX 77006",
+    "neighborhood": "Midtown",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Atlas Ultra Lounge",
+    "slugKey": "atlas",
+    "address": "2707 Fountain View Dr, Houston, TX 77057",
+    "neighborhood": "Galleria/Uptown",
+    "phone": "(713) 788-5654",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Unforgettable Houston",
+    "slugKey": "unforgettable",
+    "address": "5922 Washington Ave, Houston, TX 77007",
+    "neighborhood": "Washington Avenue",
+    "phone": "(713) 677-0095",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "The Address",
+    "slugKey": "address",
+    "address": "3333 Raleigh St, Houston, TX 77021",
+    "neighborhood": "Third Ward",
+    "phone": "(713) 395-2724",
+    "venue_type": "Bar"
+  },
+  {
+    "name": "Bad Habits Afterhours",
+    "slugKey": "bad-habits",
+    "address": "6134 Richmond Ave, Houston, TX 77057",
+    "neighborhood": "Galleria/Uptown",
+    "phone": "(281) 753-1498",
+    "venue_type": "Nightclub"
+  },
+  {
+    "name": "The Tipsy Lounge",
+    "slugKey": "tipsy",
+    "address": "4806 Almeda Rd, Houston, TX 77004",
+    "neighborhood": "Third Ward",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "The Encore Houston",
+    "slugKey": "encore",
+    "address": "2301 Main St, Houston, TX 77002",
+    "neighborhood": "Midtown",
+    "venue_type": "Nightclub"
+  },
+  {
+    "name": "Playground Houston",
+    "slugKey": "playground",
+    "address": "2415 Main St, Houston, TX 77002",
+    "neighborhood": "Midtown",
+    "phone": "(832) 504-4979",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Social Junkie",
+    "slugKey": "social-junkie",
+    "address": "2412 Washington Ave, Houston, TX 77007",
+    "neighborhood": "Washington Avenue",
+    "venue_type": "Bar"
+  },
+  {
+    "name": "The Savoy",
+    "slugKey": "the-savoy",
+    "address": "4402 Emancipation Ave, Houston, TX 77004",
+    "neighborhood": "Third Ward",
+    "phone": "(346) 234-8464",
+    "venue_type": "Bar"
+  },
+  {
+    "name": "Urban Social",
+    "slugKey": "urban-social",
+    "address": "3917 Richmond Ave, Houston, TX 77027",
+    "neighborhood": "Upper Kirby",
+    "venue_type": "Bar"
+  },
+  {
+    "name": "Fancy's HTX",
+    "slugKey": "fancys",
+    "address": "1947 W Gray St, Suite 200, Houston, TX 77019",
+    "neighborhood": "River Oaks",
+    "phone": "(832) 500-7132",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Faces HTX",
+    "slugKey": "faces",
+    "address": "5104 Almeda Rd, Houston, TX 77004",
+    "neighborhood": "Third Ward",
+    "phone": "(281) 247-3388",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Victory Houston",
+    "slugKey": "victory",
+    "address": "711 Main St, Suite 100, Houston, TX 77002",
+    "neighborhood": "Downtown",
+    "phone": "(832) 891-3909",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "CIEL Restaurant & Lounge",
+    "slugKey": "ciel",
+    "address": "4411 San Felipe St, Suite 101, Houston, TX 77027",
+    "neighborhood": "River Oaks",
+    "phone": "(713) 832-2435",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Quad HTX",
+    "slugKey": "quad-htx",
+    "address": "4608 Almeda Rd, Houston, TX 77004",
+    "neighborhood": "Third Ward",
+    "phone": "(281) 501-0675",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Grooves of Houston",
+    "slugKey": "grooves",
+    "address": "2300 Pierce St, Houston, TX 77003",
+    "neighborhood": "EaDo (East Downtown)",
+    "phone": "(713) 652-9900",
+    "venue_type": "Nightclub"
+  },
+  {
+    "name": "FRNDS Restaurant & Lounge",
+    "slugKey": "frnds",
+    "address": "2441 University Blvd, Houston, TX 77005",
+    "neighborhood": "Rice Village",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Urban Smoke",
+    "slugKey": "urban-smoke",
+    "address": "3913 Richmond Ave, Houston, TX 77027",
+    "neighborhood": "Upper Kirby",
+    "venue_type": "Hookah Lounge"
+  },
+  {
+    "name": "Prospect Park Galleria",
+    "slugKey": "prospect-park",
+    "address": "3100 Fountain View Dr, Houston, TX 77057",
+    "neighborhood": "Galleria/Uptown",
+    "phone": "(281) 853-5851",
+    "venue_type": "Bar"
+  },
+  {
+    "name": "Uptown Lounge",
+    "slugKey": "uptown-lounge",
+    "address": "5706 Richmond Ave, Houston, TX 77057",
+    "neighborhood": "Galleria/Uptown",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Reset Rooftop Lounge",
+    "slugKey": "reset",
+    "address": "606 Dennis St, Ste 200, Houston, TX 77006",
+    "neighborhood": "Midtown",
+    "phone": "(832) 281-9991",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Spivey's Famous Bistro",
+    "slugKey": "spiveys-famous-bistro",
+    "address": "4913 Griggs Rd, Houston, TX 77021",
+    "neighborhood": "Third Ward",
+    "phone": "(832) 481-6745",
+    "venue_type": "Restaurant"
+  },
+  {
+    "name": "The Original Red Rooster",
+    "slugKey": "red-rooster",
+    "address": "13344 Almeda Rd, Houston, TX 77045",
+    "neighborhood": "Other",
+    "phone": "(713) 847-7757",
+    "venue_type": "Nightclub"
+  },
+  {
+    "name": "Peachz",
+    "slugKey": "peachz",
+    "address": "2533 Southmore Blvd, Houston, TX 77004",
+    "neighborhood": "Third Ward",
+    "venue_type": "Bar"
+  }
+]

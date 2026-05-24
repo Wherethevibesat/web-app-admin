@@ -73,6 +73,25 @@ export async function updateUser(
   const { error } = await admin.from("users").update(payload).eq("id", userId);
   if (error) throw error;
 
+  if (fields.role === "promoter") {
+    const { data: userRow } = await admin
+      .from("users")
+      .select("name, email")
+      .eq("id", userId)
+      .maybeSingle();
+    if (userRow) {
+      await admin.from("promoter_profiles").upsert(
+        {
+          user_id: userId,
+          display_name: userRow.name,
+          contact_email: userRow.email,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id" },
+      );
+    }
+  }
+
   if (fields.email !== undefined) {
     const { error: authError } = await admin.auth.admin.updateUserById(userId, {
       email: fields.email.trim().toLowerCase(),

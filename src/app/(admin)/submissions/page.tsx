@@ -3,6 +3,7 @@ import { SubmissionsTabs } from "@/components/admin/submissions-tabs";
 import { listPendingEvents } from "@/lib/admin/events";
 import { listUnpublishedVenues } from "@/lib/admin/venues";
 import { listPendingDriverCompanies } from "@/lib/admin/drivers";
+import { listPendingPromoterLinks, listPendingPromoterEvents } from "@/lib/admin/promoters";
 
 export default async function SubmissionsPage({
   searchParams,
@@ -11,12 +12,18 @@ export default async function SubmissionsPage({
 }) {
   const { tab: tabParam } = await searchParams;
   const tab =
-    tabParam === "events" || tabParam === "drivers" ? tabParam : "venues";
+    tabParam === "events" ||
+    tabParam === "drivers" ||
+    tabParam === "promoters"
+      ? tabParam
+      : "venues";
 
-  const [venues, events, drivers] = await Promise.all([
+  const [venues, events, drivers, promoterLinks, promoterEvents] = await Promise.all([
     listUnpublishedVenues().catch(() => []),
     listPendingEvents().catch(() => []),
     listPendingDriverCompanies().catch(() => []),
+    listPendingPromoterLinks().catch(() => []),
+    listPendingPromoterEvents().catch(() => []),
   ]);
 
   return (
@@ -25,7 +32,14 @@ export default async function SubmissionsPage({
         title="Pending submissions"
         description="Approve venues, events, and driver listings before they appear in the app."
       />
-      <SubmissionsTabs venues={venues} events={events} drivers={drivers} tab={tab} />
+      <SubmissionsTabs
+        venues={venues}
+        events={events}
+        drivers={drivers}
+        promoterLinks={promoterLinks}
+        promoterEvents={promoterEvents}
+        tab={tab}
+      />
     </div>
   );
 }
