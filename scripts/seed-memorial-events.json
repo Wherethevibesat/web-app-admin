@@ -1,0 +1,56 @@
+[
+  {
+    "title": "B-City Sundays — Supreme Sundays",
+    "venueSlugKey": "pour-behavior",
+    "date": "2026-05-24",
+    "startTime": "16:00",
+    "endTime": "22:00",
+    "event_type": "Day Party",
+    "description": "Supreme Sundays featuring Bryan Michael Cox."
+  },
+  {
+    "title": "Sundays at Chapman",
+    "venueSlugKey": "chapman-kirby",
+    "date": "2026-05-24",
+    "startTime": "16:00",
+    "endTime": "22:00",
+    "event_type": "Day Party",
+    "description": "Featuring Lorenz Tate, DJ Hi-C, Feeezy, and Rogers."
+  },
+  {
+    "title": "Blanc All White",
+    "venueSlugKey": "ciel",
+    "date": "2026-05-24",
+    "startTime": "21:00",
+    "endTime": "02:00",
+    "event_type": "Night Party",
+    "description": "All-white party at CIEL."
+  },
+  {
+    "title": "Boosie's White Party",
+    "venueSlugKey": "privilege",
+    "date": "2026-05-24",
+    "startTime": "21:00",
+    "endTime": "02:00",
+    "event_type": "Night Party",
+    "description": "Featuring Boosie and Webbie."
+  },
+  {
+    "title": "DJ Envy Memorial Weekend",
+    "venueSlugKey": "5015",
+    "date": "2026-05-24",
+    "startTime": "16:00",
+    "endTime": "22:00",
+    "event_type": "Day Party",
+    "description": "Memorial Weekend event at Bar 5015."
+  },
+  {
+    "title": "Silk at Bar 5015 — Saturday Silk",
+    "venueSlugKey": "5015",
+    "date": "2026-05-23",
+    "startTime": "21:00",
+    "endTime": "02:00",
+    "event_type": "Night Party",
+    "description": "Saturday Silk at Bar 5015."
+  }
+]
