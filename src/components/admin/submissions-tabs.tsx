@@ -15,6 +15,13 @@ import {
 } from "@/components/admin/data-table";
 import type { VenueRow } from "@/lib/types/venue";
 import type { EventRow } from "@/lib/types/database";
+import { EventReviewActions } from "@/components/admin/event-review-actions";
+import { TableCheckbox } from "@/components/ui/table-checkbox";
+import {
+  EventBulkApproveBar,
+  useBulkApproveEvents,
+  usePendingEventSelection,
+} from "@/components/admin/event-bulk-approve";
 
 export function SubmissionsTabs({
   venues,
@@ -27,6 +34,8 @@ export function SubmissionsTabs({
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
+  const selection = usePendingEventSelection(events);
+  const bulk = useBulkApproveEvents(selection.clearSelection);
 
   async function publishVenue(id: string) {
     setBusy(id);
@@ -34,17 +43,6 @@ export function SubmissionsTabs({
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ published: true }),
-    });
-    setBusy(null);
-    router.refresh();
-  }
-
-  async function publishEvent(id: string) {
-    setBusy(id);
-    await fetch(`/api/admin/events/${id}/status`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: "published" }),
     });
     setBusy(null);
     router.refresh();
@@ -113,40 +111,63 @@ export function SubmissionsTabs({
           No pending events. Run migration 004 if the events table is missing.
         </p>
       ) : (
-        <DataTable>
-          <DataTableHead>
-            <tr>
-              <DataTableHeaderCell>Title</DataTableHeaderCell>
-              <DataTableHeaderCell>Venue</DataTableHeaderCell>
-              <DataTableHeaderCell>Starts</DataTableHeaderCell>
-              <DataTableHeaderCell>Status</DataTableHeaderCell>
-              <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
-            </tr>
-          </DataTableHead>
-          <DataTableBody>
-            {events.map((e) => (
-              <DataTableRow key={e.id}>
-                <DataTableCell>{e.title}</DataTableCell>
-                <DataTableCell>{e.venue?.name ?? "—"}</DataTableCell>
-                <DataTableCell>
-                  {new Date(e.starts_at).toLocaleString()}
-                </DataTableCell>
-                <DataTableCell>
-                  <Badge variant="warning">{e.status}</Badge>
-                </DataTableCell>
-                <DataTableCell className="text-right">
-                  <Button
-                    disabled={busy === e.id}
-                    className="px-3 py-1 text-xs"
-                    onClick={() => publishEvent(e.id)}
-                  >
-                    Approve
-                  </Button>
-                </DataTableCell>
-              </DataTableRow>
-            ))}
-          </DataTableBody>
-        </DataTable>
+        <>
+          <EventBulkApproveBar
+            pendingCount={selection.pendingIds.length}
+            selectedCount={selection.selectedCount}
+            allPendingSelected={selection.allPendingSelected}
+            busy={bulk.busy}
+            onSelectAll={selection.toggleAll}
+            onApprove={() => bulk.approveSelected([...selection.selected])}
+            onClear={selection.clearSelection}
+          />
+          <DataTable>
+            <DataTableHead>
+              <tr>
+                <DataTableHeaderCell className="w-12">
+                  <TableCheckbox
+                    checked={selection.allPendingSelected}
+                    onChange={(e) => selection.toggleAll(e.target.checked)}
+                    aria-label="Select all pending events"
+                  />
+                </DataTableHeaderCell>
+                <DataTableHeaderCell>Title</DataTableHeaderCell>
+                <DataTableHeaderCell>Venue</DataTableHeaderCell>
+                <DataTableHeaderCell>Starts</DataTableHeaderCell>
+                <DataTableHeaderCell>Status</DataTableHeaderCell>
+                <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
+              </tr>
+            </DataTableHead>
+            <DataTableBody>
+              {events.map((e) => (
+                <DataTableRow key={e.id}>
+                  <DataTableCell>
+                    <TableCheckbox
+                      checked={selection.selected.has(e.id)}
+                      disabled={busy === e.id || bulk.busy}
+                      onChange={(ev) => selection.toggleOne(e.id, ev.target.checked)}
+                      aria-label={`Select ${e.title}`}
+                    />
+                  </DataTableCell>
+                  <DataTableCell>{e.title}</DataTableCell>
+                  <DataTableCell>{e.venue?.name ?? "—"}</DataTableCell>
+                  <DataTableCell>
+                    {new Date(e.starts_at).toLocaleString()}
+                  </DataTableCell>
+                  <DataTableCell>
+                    <Badge variant="warning">{e.status}</Badge>
+                  </DataTableCell>
+                  <DataTableCell className="text-right">
+                    <EventReviewActions
+                      eventId={e.id}
+                      disabled={busy === e.id || bulk.busy}
+                    />
+                  </DataTableCell>
+                </DataTableRow>
+              ))}
+            </DataTableBody>
+          </DataTable>
+        </>
       )}
     </div>
   );

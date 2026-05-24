@@ -34,6 +34,10 @@ export function SettingsForm({ initial }: { initial: PlatformSettings }) {
     <form onSubmit={handleSubmit} className="max-w-lg space-y-6">
       <div className="rounded-xl border border-wtva-dark-300 bg-wtva-card p-6 space-y-4">
         <h2 className="font-semibold">Submission fees</h2>
+        <p className="text-sm text-wtva-muted">
+          Venues pay this fee to publish events instantly (no admin approval). Unpaid submissions
+          stay in the review queue unless auto-approve is enabled.
+        </p>
         <div>
           <Label htmlFor="venue_fee">Venue submission fee ($)</Label>
           <Input
@@ -70,6 +74,10 @@ export function SettingsForm({ initial }: { initial: PlatformSettings }) {
 
       <div className="rounded-xl border border-wtva-dark-300 bg-wtva-card p-6 space-y-3">
         <h2 className="font-semibold">Approval rules</h2>
+        <p className="text-sm text-wtva-muted">
+          Paid event posts publish immediately. When payment is required, free submission is
+          disabled.
+        </p>
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useConfirmDelete } from "@/components/ui/confirm-dialog";
+import { useConfirmDelete, useConfirm } from "@/components/ui/confirm-dialog";
 import {
   DataTable,
   DataTableBody,
@@ -19,17 +19,35 @@ import type { VenueRow } from "@/lib/types/venue";
 export function VenuesTable({ venues }: { venues: VenueRow[] }) {
   const router = useRouter();
   const confirmDelete = useConfirmDelete();
+  const confirm = useConfirm();
   const [busy, setBusy] = useState<string | null>(null);
 
-  async function toggleFeatured(id: string, featured: boolean) {
+  async function patchVenue(id: string, patch: Record<string, unknown>) {
     setBusy(id);
     await fetch(`/api/admin/venues/${id}/patch`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ featured: !featured }),
+      body: JSON.stringify(patch),
     });
     setBusy(null);
     router.refresh();
+  }
+
+  async function toggleFeatured(id: string, featured: boolean) {
+    await patchVenue(id, { featured: !featured });
+  }
+
+  async function setPublished(id: string, name: string, published: boolean) {
+    if (!published) {
+      const ok = await confirm({
+        title: "Deactivate venue?",
+        description: `"${name}" will be hidden from customers. The owner can still manage it in the business portal.`,
+        confirmLabel: "Deactivate",
+        variant: "danger",
+      });
+      if (!ok) return;
+    }
+    await patchVenue(id, { published });
   }
 
   async function deleteVenue(id: string, name: string) {
@@ -82,11 +100,29 @@ export function VenuesTable({ venues }: { venues: VenueRow[] }) {
                 {v.verification_status === "pending" && (
                   <Badge variant="warning">Pending doc</Badge>
                 )}
-                {v.published === false && <Badge variant="danger">Unpublished</Badge>}
+                {v.published === false && <Badge variant="danger">Deactivated</Badge>}
               </div>
             </DataTableCell>
             <DataTableCell className="text-right">
-              <div className="flex justify-end gap-2">
+              <div className="flex flex-wrap justify-end gap-2">
+                {v.published !== false ? (
+                  <Button
+                    variant="ghost"
+                    className="px-2 py-1 text-xs"
+                    disabled={busy === v.id}
+                    onClick={() => setPublished(v.id, v.name, false)}
+                  >
+                    Deactivate
+                  </Button>
+                ) : (
+                  <Button
+                    className="px-2 py-1 text-xs"
+                    disabled={busy === v.id}
+                    onClick={() => setPublished(v.id, v.name, true)}
+                  >
+                    Activate
+                  </Button>
+                )}
                 <Button
                   variant="ghost"
                   className="px-2 py-1 text-xs"

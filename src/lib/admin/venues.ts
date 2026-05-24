@@ -114,3 +114,16 @@ export async function listUnpublishedVenues(): Promise<VenueRow[]> {
   if (error) throw error;
   return (data ?? []) as VenueRow[];
 }
+
+export async function setVenuePublished(venueId: string, published: boolean) {
+  const admin = createAdminClient();
+  const patch: Record<string, unknown> = {
+    published,
+    updated_at: new Date().toISOString(),
+  };
+  if (!published) {
+    patch.featured = false;
+  }
+  const { error } = await admin.from("venues").update(patch).eq("id", venueId);
+  if (error) throw error;
+}
