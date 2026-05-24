@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   Building2,
   Calendar,
+  Car,
   ChevronLeft,
   ChevronRight,
   DollarSign,
@@ -27,6 +28,7 @@ const navItems = [
   { href: "/venues", label: "Venues", icon: Building2 },
   { href: "/neighborhoods", label: "Neighborhoods", icon: MapPin },
   { href: "/events", label: "Events", icon: Calendar },
+  { href: "/drivers", label: "Drivers", icon: Car },
   { href: "/users", label: "Users", icon: Users },
   { href: "/submissions", label: "Submissions", icon: FileCheck },
   { href: "/submissions/verification", label: "Verification", icon: BadgeCheck },

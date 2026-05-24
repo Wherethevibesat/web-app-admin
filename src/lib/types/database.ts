@@ -15,7 +15,11 @@ export interface UserProfile {
 export interface PlatformSettings {
   id: number;
   venue_submission_fee: number;
+  venue_listing_months: number;
   event_submission_fee: number;
+  driver_listing_fee: number;
+  driver_listing_months: number;
+  driver_booking_commission_pct: number;
   auto_approve_venues: boolean;
   auto_approve_events: boolean;
   require_payment: boolean;

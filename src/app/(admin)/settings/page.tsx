@@ -7,7 +7,11 @@ export default async function SettingsPage() {
   const settings = await getPlatformSettings().catch(() => ({
     id: 1,
     venue_submission_fee: 50,
+    venue_listing_months: 3,
     event_submission_fee: 25,
+    driver_listing_fee: 50,
+    driver_listing_months: 3,
+    driver_booking_commission_pct: 10,
     auto_approve_venues: false,
     auto_approve_events: false,
     require_payment: true,

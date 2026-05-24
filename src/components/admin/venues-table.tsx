@@ -16,6 +16,14 @@ import {
 } from "@/components/admin/data-table";
 import type { VenueRow } from "@/lib/types/venue";
 
+function listingLabel(expiresAt: string | null | undefined, published: boolean | null | undefined) {
+  if (published === false) return "Not live";
+  if (!expiresAt) return published ? "Live" : "Not paid";
+  const exp = new Date(expiresAt);
+  if (exp.getTime() <= Date.now()) return "Expired";
+  return `Until ${exp.toLocaleDateString()}`;
+}
+
 export function VenuesTable({ venues }: { venues: VenueRow[] }) {
   const router = useRouter();
   const confirmDelete = useConfirmDelete();
@@ -75,6 +83,7 @@ export function VenuesTable({ venues }: { venues: VenueRow[] }) {
           <DataTableHeaderCell>Area</DataTableHeaderCell>
           <DataTableHeaderCell>Tier</DataTableHeaderCell>
           <DataTableHeaderCell>Status</DataTableHeaderCell>
+          <DataTableHeaderCell>Listing</DataTableHeaderCell>
           <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
         </tr>
       </DataTableHead>
@@ -102,6 +111,9 @@ export function VenuesTable({ venues }: { venues: VenueRow[] }) {
                 )}
                 {v.published === false && <Badge variant="danger">Deactivated</Badge>}
               </div>
+            </DataTableCell>
+            <DataTableCell className="text-sm text-wtva-muted">
+              {listingLabel(v.listing_expires_at, v.published)}
             </DataTableCell>
             <DataTableCell className="text-right">
               <div className="flex flex-wrap justify-end gap-2">

@@ -23,6 +23,8 @@ export interface VenueRow {
   verification_document_path?: string | null;
   featured?: boolean | null;
   published?: boolean | null;
+  listing_paid_at?: string | null;
+  listing_expires_at?: string | null;
   neighborhood?: string | null;
   created_at: string;
   updated_at: string;

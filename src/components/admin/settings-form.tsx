@@ -19,7 +19,11 @@ export function SettingsForm({ initial }: { initial: PlatformSettings }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         venue_submission_fee: form.venue_submission_fee,
+        venue_listing_months: form.venue_listing_months,
         event_submission_fee: form.event_submission_fee,
+        driver_listing_fee: form.driver_listing_fee,
+        driver_listing_months: form.driver_listing_months,
+        driver_booking_commission_pct: form.driver_booking_commission_pct,
         auto_approve_venues: form.auto_approve_venues,
         auto_approve_events: form.auto_approve_events,
         require_payment: form.require_payment,
@@ -33,13 +37,13 @@ export function SettingsForm({ initial }: { initial: PlatformSettings }) {
   return (
     <form onSubmit={handleSubmit} className="max-w-lg space-y-6">
       <div className="rounded-xl border border-wtva-dark-300 bg-wtva-card p-6 space-y-4">
-        <h2 className="font-semibold">Submission fees</h2>
+        <h2 className="font-semibold">Venue listings</h2>
         <p className="text-sm text-wtva-muted">
-          Venues pay this fee to publish events instantly (no admin approval). Unpaid submissions
-          stay in the review queue unless auto-approve is enabled.
+          Venue owners pay once to be listed on the customer app for a set number of months.
+          Admin reviews before the venue goes live.
         </p>
         <div>
-          <Label htmlFor="venue_fee">Venue submission fee ($)</Label>
+          <Label htmlFor="venue_fee">Venue listing fee ($)</Label>
           <Input
             id="venue_fee"
             type="number"
@@ -55,6 +59,33 @@ export function SettingsForm({ initial }: { initial: PlatformSettings }) {
           />
         </div>
         <div>
+          <Label htmlFor="venue_listing_months">Listing duration (months)</Label>
+          <Input
+            id="venue_listing_months"
+            type="number"
+            min={1}
+            step={1}
+            value={form.venue_listing_months ?? 3}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                venue_listing_months: Number(e.target.value),
+              }))
+            }
+          />
+          <p className="mt-1 text-xs text-wtva-subtle">
+            Example: $50 for 3 months - venue must pay again when listing expires.
+          </p>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-wtva-dark-300 bg-wtva-card p-6 space-y-4">
+        <h2 className="font-semibold">Event posting</h2>
+        <p className="text-sm text-wtva-muted">
+          Fee to publish an event instantly without admin approval. Unpaid events stay in the
+          review queue unless auto-approve is enabled.
+        </p>
+        <div>
           <Label htmlFor="event_fee">Event submission fee ($)</Label>
           <Input
             id="event_fee"
@@ -69,6 +100,69 @@ export function SettingsForm({ initial }: { initial: PlatformSettings }) {
               }))
             }
           />
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-wtva-dark-300 bg-wtva-card p-6 space-y-4">
+        <h2 className="font-semibold">Driver / limo listings</h2>
+        <p className="text-sm text-wtva-muted">
+          Drivers pay once to be listed for a set number of months. You earn a commission on each
+          accepted customer booking.
+        </p>
+        <div>
+          <Label htmlFor="driver_listing_fee">Driver listing fee ($)</Label>
+          <Input
+            id="driver_listing_fee"
+            type="number"
+            min={0}
+            step={1}
+            value={form.driver_listing_fee}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                driver_listing_fee: Number(e.target.value),
+              }))
+            }
+          />
+        </div>
+        <div>
+          <Label htmlFor="driver_listing_months">Listing duration (months)</Label>
+          <Input
+            id="driver_listing_months"
+            type="number"
+            min={1}
+            step={1}
+            value={form.driver_listing_months}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                driver_listing_months: Number(e.target.value),
+              }))
+            }
+          />
+          <p className="mt-1 text-xs text-wtva-subtle">
+            Example: $50 for 3 months - driver must pay again when listing expires.
+          </p>
+        </div>
+        <div>
+          <Label htmlFor="driver_commission">Booking commission (%)</Label>
+          <Input
+            id="driver_commission"
+            type="number"
+            min={0}
+            max={100}
+            step={0.5}
+            value={form.driver_booking_commission_pct}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                driver_booking_commission_pct: Number(e.target.value),
+              }))
+            }
+          />
+          <p className="mt-1 text-xs text-wtva-subtle">
+            Platform share of each paid booking (after driver accepts).
+          </p>
         </div>
       </div>
 

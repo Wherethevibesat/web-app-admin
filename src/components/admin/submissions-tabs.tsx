@@ -15,6 +15,7 @@ import {
 } from "@/components/admin/data-table";
 import type { VenueRow } from "@/lib/types/venue";
 import type { EventRow } from "@/lib/types/database";
+import type { DriverCompanySubmission } from "@/lib/admin/drivers";
 import { EventReviewActions } from "@/components/admin/event-review-actions";
 import { TableCheckbox } from "@/components/ui/table-checkbox";
 import {
@@ -26,11 +27,13 @@ import {
 export function SubmissionsTabs({
   venues,
   events,
+  drivers,
   tab,
 }: {
   venues: VenueRow[];
   events: EventRow[];
-  tab: "venues" | "events";
+  drivers: DriverCompanySubmission[];
+  tab: "venues" | "events" | "drivers";
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
@@ -43,6 +46,17 @@ export function SubmissionsTabs({
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ published: true }),
+    });
+    setBusy(null);
+    router.refresh();
+  }
+
+  async function publishDriver(id: string) {
+    setBusy(id);
+    await fetch(`/api/admin/drivers/${id}/patch`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: "published", published: true }),
     });
     setBusy(null);
     router.refresh();
@@ -71,6 +85,16 @@ export function SubmissionsTabs({
         >
           Events ({events.length})
         </Link>
+        <Link
+          href="/submissions?tab=drivers"
+          className={`px-4 py-2 text-sm font-medium ${
+            tab === "drivers"
+              ? "border-b-2 border-foreground text-foreground"
+              : "text-wtva-muted"
+          }`}
+        >
+          Drivers ({drivers.length})
+        </Link>
       </div>
 
       {tab === "venues" ? (
@@ -83,6 +107,7 @@ export function SubmissionsTabs({
                 <DataTableHeaderCell>Name</DataTableHeaderCell>
                 <DataTableHeaderCell>Type</DataTableHeaderCell>
                 <DataTableHeaderCell>Area</DataTableHeaderCell>
+                <DataTableHeaderCell>Listing expires</DataTableHeaderCell>
                 <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
               </tr>
             </DataTableHead>
@@ -91,7 +116,14 @@ export function SubmissionsTabs({
                 <DataTableRow key={v.id}>
                   <DataTableCell>{v.name}</DataTableCell>
                   <DataTableCell>{v.venue_type}</DataTableCell>
-                  <DataTableCell>{v.neighborhood ?? "—"}</DataTableCell>
+                  <DataTableCell>{v.neighborhood ?? "-"}</DataTableCell>
+                  <DataTableCell>
+                    {v.listing_expires_at
+                      ? new Date(v.listing_expires_at).toLocaleDateString()
+                      : v.listing_paid_at
+                        ? "-"
+                        : "Not paid"}
+                  </DataTableCell>
                   <DataTableCell className="text-right">
                     <Button
                       disabled={busy === v.id}
@@ -106,68 +138,103 @@ export function SubmissionsTabs({
             </DataTableBody>
           </DataTable>
         )
-      ) : events.length === 0 ? (
-        <p className="text-wtva-muted">
-          No pending events. Run migration 004 if the events table is missing.
-        </p>
-      ) : (
-        <>
-          <EventBulkApproveBar
-            pendingCount={selection.pendingIds.length}
-            selectedCount={selection.selectedCount}
-            allPendingSelected={selection.allPendingSelected}
-            busy={bulk.busy}
-            onSelectAll={selection.toggleAll}
-            onApprove={() => bulk.approveSelected([...selection.selected])}
-            onClear={selection.clearSelection}
-          />
-          <DataTable>
-            <DataTableHead>
-              <tr>
-                <DataTableHeaderCell className="w-12">
-                  <TableCheckbox
-                    checked={selection.allPendingSelected}
-                    onChange={(e) => selection.toggleAll(e.target.checked)}
-                    aria-label="Select all pending events"
-                  />
-                </DataTableHeaderCell>
-                <DataTableHeaderCell>Title</DataTableHeaderCell>
-                <DataTableHeaderCell>Venue</DataTableHeaderCell>
-                <DataTableHeaderCell>Starts</DataTableHeaderCell>
-                <DataTableHeaderCell>Status</DataTableHeaderCell>
-                <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
-              </tr>
-            </DataTableHead>
-            <DataTableBody>
-              {events.map((e) => (
-                <DataTableRow key={e.id}>
-                  <DataTableCell>
+      ) : tab === "events" ? (
+        events.length === 0 ? (
+          <p className="text-wtva-muted">No pending events.</p>
+        ) : (
+          <>
+            <EventBulkApproveBar
+              pendingCount={selection.pendingIds.length}
+              selectedCount={selection.selectedCount}
+              allPendingSelected={selection.allPendingSelected}
+              busy={bulk.busy}
+              onSelectAll={selection.toggleAll}
+              onApprove={() => bulk.approveSelected([...selection.selected])}
+              onClear={selection.clearSelection}
+            />
+            <DataTable>
+              <DataTableHead>
+                <tr>
+                  <DataTableHeaderCell className="w-12">
                     <TableCheckbox
-                      checked={selection.selected.has(e.id)}
-                      disabled={busy === e.id || bulk.busy}
-                      onChange={(ev) => selection.toggleOne(e.id, ev.target.checked)}
-                      aria-label={`Select ${e.title}`}
+                      checked={selection.allPendingSelected}
+                      onChange={(e) => selection.toggleAll(e.target.checked)}
+                      aria-label="Select all pending events"
                     />
-                  </DataTableCell>
-                  <DataTableCell>{e.title}</DataTableCell>
-                  <DataTableCell>{e.venue?.name ?? "—"}</DataTableCell>
-                  <DataTableCell>
-                    {new Date(e.starts_at).toLocaleString()}
-                  </DataTableCell>
-                  <DataTableCell>
-                    <Badge variant="warning">{e.status}</Badge>
-                  </DataTableCell>
-                  <DataTableCell className="text-right">
-                    <EventReviewActions
-                      eventId={e.id}
-                      disabled={busy === e.id || bulk.busy}
-                    />
-                  </DataTableCell>
-                </DataTableRow>
-              ))}
-            </DataTableBody>
-          </DataTable>
-        </>
+                  </DataTableHeaderCell>
+                  <DataTableHeaderCell>Title</DataTableHeaderCell>
+                  <DataTableHeaderCell>Venue</DataTableHeaderCell>
+                  <DataTableHeaderCell>Starts</DataTableHeaderCell>
+                  <DataTableHeaderCell>Status</DataTableHeaderCell>
+                  <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
+                </tr>
+              </DataTableHead>
+              <DataTableBody>
+                {events.map((e) => (
+                  <DataTableRow key={e.id}>
+                    <DataTableCell>
+                      <TableCheckbox
+                        checked={selection.selected.has(e.id)}
+                        disabled={busy === e.id || bulk.busy}
+                        onChange={(ev) => selection.toggleOne(e.id, ev.target.checked)}
+                        aria-label={`Select ${e.title}`}
+                      />
+                    </DataTableCell>
+                    <DataTableCell>{e.title}</DataTableCell>
+                    <DataTableCell>{e.venue?.name ?? "-"}</DataTableCell>
+                    <DataTableCell>{new Date(e.starts_at).toLocaleString()}</DataTableCell>
+                    <DataTableCell>
+                      <Badge variant="warning">{e.status}</Badge>
+                    </DataTableCell>
+                    <DataTableCell className="text-right">
+                      <EventReviewActions
+                        eventId={e.id}
+                        disabled={busy === e.id || bulk.busy}
+                      />
+                    </DataTableCell>
+                  </DataTableRow>
+                ))}
+              </DataTableBody>
+            </DataTable>
+          </>
+        )
+      ) : drivers.length === 0 ? (
+        <p className="text-wtva-muted">No pending driver listings.</p>
+      ) : (
+        <DataTable>
+          <DataTableHead>
+            <tr>
+              <DataTableHeaderCell>Company</DataTableHeaderCell>
+              <DataTableHeaderCell>City</DataTableHeaderCell>
+              <DataTableHeaderCell>Email</DataTableHeaderCell>
+              <DataTableHeaderCell>Listing expires</DataTableHeaderCell>
+              <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
+            </tr>
+          </DataTableHead>
+          <DataTableBody>
+            {drivers.map((d) => (
+              <DataTableRow key={d.id}>
+                <DataTableCell>{d.company_name}</DataTableCell>
+                <DataTableCell>{d.city ?? "-"}</DataTableCell>
+                <DataTableCell>{d.contact_email ?? "-"}</DataTableCell>
+                <DataTableCell>
+                  {d.listing_expires_at
+                    ? new Date(d.listing_expires_at).toLocaleDateString()
+                    : "-"}
+                </DataTableCell>
+                <DataTableCell className="text-right">
+                  <Button
+                    disabled={busy === d.id}
+                    className="px-3 py-1 text-xs"
+                    onClick={() => publishDriver(d.id)}
+                  >
+                    Approve & publish
+                  </Button>
+                </DataTableCell>
+              </DataTableRow>
+            ))}
+          </DataTableBody>
+        </DataTable>
       )}
     </div>
   );
