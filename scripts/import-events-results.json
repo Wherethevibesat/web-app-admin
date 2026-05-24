@@ -1,0 +1,59 @@
+{
+  "results": [
+    {
+      "title": "B-City Sundays — Supreme Sundays",
+      "status": "created",
+      "eventId": "079ac896-6ae2-471e-b892-3888ee654b7c",
+      "venue": "Pour Behavior",
+      "starts_at": "2026-05-24T16:00:00-05:00"
+    },
+    {
+      "title": "Sundays at Chapman",
+      "status": "created",
+      "eventId": "0db4051f-0975-46ba-a747-e25be406e731",
+      "venue": "Chapman & Kirby",
+      "starts_at": "2026-05-24T16:00:00-05:00"
+    },
+    {
+      "title": "Blanc All White",
+      "status": "created",
+      "eventId": "63a1b33b-713e-4e89-92c6-1a6b7b3c9990",
+      "venue": "CIEL Restaurant & Lounge",
+      "starts_at": "2026-05-24T21:00:00-05:00"
+    },
+    {
+      "title": "Boosie's White Party",
+      "status": "created",
+      "eventId": "c3a296ad-4086-42c9-a139-23553c21e234",
+      "venue": "Privilege Rooftop Lounge",
+      "starts_at": "2026-05-24T21:00:00-05:00"
+    },
+    {
+      "title": "DJ Envy Memorial Weekend",
+      "status": "created",
+      "eventId": "5ab9d012-6152-4f42-a9b9-3c0f696278c4",
+      "venue": "Bar 5015",
+      "starts_at": "2026-05-24T16:00:00-05:00"
+    },
+    {
+      "title": "Silk at Bar 5015 — Saturday Silk",
+      "status": "created",
+      "eventId": "6c8c6737-e586-4a2c-84dd-3de9ea26bfd9",
+      "venue": "Bar 5015",
+      "starts_at": "2026-05-23T21:00:00-05:00"
+    }
+  ],
+  "errors": [],
+  "skippedNoVenue": [
+    {
+      "title": "Crawfish & Verde Food Festival",
+      "date": "2026-05-24",
+      "reason": "No venue in source list — add manually when venue is known"
+    },
+    {
+      "title": "Gladys Knight & Patti LaBelle",
+      "date": "2026-09-20",
+      "reason": "Concert/show with no venue in source list"
+    }
+  ]
+}

@@ -1,0 +1,317 @@
+{
+  "results": [
+    {
+      "name": "Bar 5015",
+      "status": "created",
+      "venueId": "5015-191cec09",
+      "email": "colossaloneinc+5015@gmail.com",
+      "address": "5015 Almeda Rd, Houston, TX 77004",
+      "neighborhood": "Third Ward"
+    },
+    {
+      "name": "Chapman & Kirby",
+      "status": "created",
+      "venueId": "chapman-kirby-8a0a5ed2",
+      "email": "colossaloneinc+chapman-kirby@gmail.com",
+      "address": "2118 Lamar St, Houston, TX 77003",
+      "neighborhood": "EaDo (East Downtown)"
+    },
+    {
+      "name": "Lounge 2727",
+      "status": "created",
+      "venueId": "lounge-2727-1d7f0e1d",
+      "email": "colossaloneinc+lounge-2727@gmail.com",
+      "address": "2727 Fondren Rd, Houston, TX 77063",
+      "neighborhood": "Galleria/Uptown"
+    },
+    {
+      "name": "Dome Nightclub",
+      "status": "created",
+      "venueId": "dome-6e6192da",
+      "email": "colossaloneinc+dome@gmail.com",
+      "address": "1720 Main St, Houston, TX 77002",
+      "neighborhood": "Downtown"
+    },
+    {
+      "name": "Sekai Night & Day",
+      "status": "created",
+      "venueId": "sekai-cc2ddaa7",
+      "email": "colossaloneinc+sekai@gmail.com",
+      "address": "1505 St Emanuel St, Houston, TX 77003",
+      "neighborhood": "EaDo (East Downtown)"
+    },
+    {
+      "name": "DND HTX",
+      "status": "created",
+      "venueId": "dnd-83045850",
+      "email": "colossaloneinc+dnd@gmail.com",
+      "address": "5920 Richmond Ave, Houston, TX 77057",
+      "neighborhood": "Galleria/Uptown"
+    },
+    {
+      "name": "Bar P10",
+      "status": "created",
+      "venueId": "p10-19577803",
+      "email": "colossaloneinc+p10@gmail.com",
+      "address": "6213 Richmond Ave, Houston, TX 77057",
+      "neighborhood": "Galleria/Uptown"
+    },
+    {
+      "name": "D-Bar",
+      "status": "created",
+      "venueId": "d-bar-f47ed642",
+      "email": "colossaloneinc+d-bar@gmail.com",
+      "address": "4409 Emancipation Ave, Houston, TX 77004",
+      "neighborhood": "Third Ward"
+    },
+    {
+      "name": "Pour Behavior",
+      "status": "created",
+      "venueId": "pour-behavior-2e6c1681",
+      "email": "colossaloneinc+pour-behavior@gmail.com",
+      "address": "2211 Travis St, Houston, TX 77002",
+      "neighborhood": "Midtown"
+    },
+    {
+      "name": "Privilege Rooftop Lounge",
+      "status": "created",
+      "venueId": "privilege-2059577d",
+      "email": "colossaloneinc+privilege@gmail.com",
+      "address": "808 Anita St, Houston, TX 77006",
+      "neighborhood": "Midtown"
+    },
+    {
+      "name": "Seaside Lounge HTX",
+      "status": "created",
+      "venueId": "seaside-5eceb313",
+      "email": "colossaloneinc+seaside@gmail.com",
+      "address": "702 W Dallas St, Houston, TX 77019",
+      "neighborhood": "Fourth Ward"
+    },
+    {
+      "name": "KAMP Houston",
+      "status": "created",
+      "venueId": "kamp-1b5dde00",
+      "email": "colossaloneinc+kamp@gmail.com",
+      "address": "6025 Westheimer Rd, Houston, TX 77057",
+      "neighborhood": "Galleria/Uptown"
+    },
+    {
+      "name": "A'dor Almeda",
+      "status": "created",
+      "venueId": "ador-almeda-8c529e94",
+      "email": "colossaloneinc+ador-almeda@gmail.com",
+      "address": "4830 Almeda Rd, Houston, TX 77004",
+      "neighborhood": "Third Ward"
+    },
+    {
+      "name": "XO Sky Lounge",
+      "status": "created",
+      "venueId": "xo-lounge-b385861b",
+      "email": "colossaloneinc+xo-lounge@gmail.com",
+      "address": "5023 Washington Ave, Floor 2, Houston, TX 77007",
+      "neighborhood": "Washington Avenue"
+    },
+    {
+      "name": "Styx & Stone",
+      "status": "created",
+      "venueId": "styx-stone-93541b7c",
+      "email": "colossaloneinc+styx-stone@gmail.com",
+      "address": "2400 Brazos St, Houston, TX 77006",
+      "neighborhood": "Midtown"
+    },
+    {
+      "name": "Atlas Ultra Lounge",
+      "status": "created",
+      "venueId": "atlas-24f87ca4",
+      "email": "colossaloneinc+atlas@gmail.com",
+      "address": "2707 Fountain View Dr, Houston, TX 77057",
+      "neighborhood": "Galleria/Uptown"
+    },
+    {
+      "name": "Unforgettable Houston",
+      "status": "created",
+      "venueId": "unforgettable-f5b6ab8d",
+      "email": "colossaloneinc+unforgettable@gmail.com",
+      "address": "5922 Washington Ave, Houston, TX 77007",
+      "neighborhood": "Washington Avenue"
+    },
+    {
+      "name": "The Address",
+      "status": "created",
+      "venueId": "address-de5dc56a",
+      "email": "colossaloneinc+address@gmail.com",
+      "address": "3333 Raleigh St, Houston, TX 77021",
+      "neighborhood": "Third Ward"
+    },
+    {
+      "name": "Bad Habits Afterhours",
+      "status": "created",
+      "venueId": "bad-habits-acd92521",
+      "email": "colossaloneinc+bad-habits@gmail.com",
+      "address": "6134 Richmond Ave, Houston, TX 77057",
+      "neighborhood": "Galleria/Uptown"
+    },
+    {
+      "name": "The Tipsy Lounge",
+      "status": "created",
+      "venueId": "tipsy-199efc56",
+      "email": "colossaloneinc+tipsy@gmail.com",
+      "address": "4806 Almeda Rd, Houston, TX 77004",
+      "neighborhood": "Third Ward"
+    },
+    {
+      "name": "The Encore Houston",
+      "status": "created",
+      "venueId": "encore-3a52c06c",
+      "email": "colossaloneinc+encore@gmail.com",
+      "address": "2301 Main St, Houston, TX 77002",
+      "neighborhood": "Midtown"
+    },
+    {
+      "name": "Playground Houston",
+      "status": "created",
+      "venueId": "playground-1580b55b",
+      "email": "colossaloneinc+playground@gmail.com",
+      "address": "2415 Main St, Houston, TX 77002",
+      "neighborhood": "Midtown"
+    },
+    {
+      "name": "Social Junkie",
+      "status": "created",
+      "venueId": "social-junkie-11ff78fa",
+      "email": "colossaloneinc+social-junkie@gmail.com",
+      "address": "2412 Washington Ave, Houston, TX 77007",
+      "neighborhood": "Washington Avenue"
+    },
+    {
+      "name": "The Savoy",
+      "status": "created",
+      "venueId": "the-savoy-61fc7856",
+      "email": "colossaloneinc+the-savoy@gmail.com",
+      "address": "4402 Emancipation Ave, Houston, TX 77004",
+      "neighborhood": "Third Ward"
+    },
+    {
+      "name": "Urban Social",
+      "status": "created",
+      "venueId": "urban-social-0ec325e4",
+      "email": "colossaloneinc+urban-social@gmail.com",
+      "address": "3917 Richmond Ave, Houston, TX 77027",
+      "neighborhood": "Upper Kirby"
+    },
+    {
+      "name": "Fancy's HTX",
+      "status": "created",
+      "venueId": "fancys-ee2f9f98",
+      "email": "colossaloneinc+fancys@gmail.com",
+      "address": "1947 W Gray St, Suite 200, Houston, TX 77019",
+      "neighborhood": "River Oaks"
+    },
+    {
+      "name": "Faces HTX",
+      "status": "created",
+      "venueId": "faces-7bad9361",
+      "email": "colossaloneinc+faces@gmail.com",
+      "address": "5104 Almeda Rd, Houston, TX 77004",
+      "neighborhood": "Third Ward"
+    },
+    {
+      "name": "Victory Houston",
+      "status": "created",
+      "venueId": "victory-0fc23f36",
+      "email": "colossaloneinc+victory@gmail.com",
+      "address": "711 Main St, Suite 100, Houston, TX 77002",
+      "neighborhood": "Downtown"
+    },
+    {
+      "name": "CIEL Restaurant & Lounge",
+      "status": "created",
+      "venueId": "ciel-8e849390",
+      "email": "colossaloneinc+ciel@gmail.com",
+      "address": "4411 San Felipe St, Suite 101, Houston, TX 77027",
+      "neighborhood": "River Oaks"
+    },
+    {
+      "name": "Quad HTX",
+      "status": "created",
+      "venueId": "quad-htx-3e7f9c06",
+      "email": "colossaloneinc+quad-htx@gmail.com",
+      "address": "4608 Almeda Rd, Houston, TX 77004",
+      "neighborhood": "Third Ward"
+    },
+    {
+      "name": "Grooves of Houston",
+      "status": "created",
+      "venueId": "grooves-10d93e55",
+      "email": "colossaloneinc+grooves@gmail.com",
+      "address": "2300 Pierce St, Houston, TX 77003",
+      "neighborhood": "EaDo (East Downtown)"
+    },
+    {
+      "name": "FRNDS Restaurant & Lounge",
+      "status": "created",
+      "venueId": "frnds-ee9b0ca7",
+      "email": "colossaloneinc+frnds@gmail.com",
+      "address": "2441 University Blvd, Houston, TX 77005",
+      "neighborhood": "Rice Village"
+    },
+    {
+      "name": "Urban Smoke",
+      "status": "created",
+      "venueId": "urban-smoke-c084e9e4",
+      "email": "colossaloneinc+urban-smoke@gmail.com",
+      "address": "3913 Richmond Ave, Houston, TX 77027",
+      "neighborhood": "Upper Kirby"
+    },
+    {
+      "name": "Prospect Park Galleria",
+      "status": "created",
+      "venueId": "prospect-park-ee9874ff",
+      "email": "colossaloneinc+prospect-park@gmail.com",
+      "address": "3100 Fountain View Dr, Houston, TX 77057",
+      "neighborhood": "Galleria/Uptown"
+    },
+    {
+      "name": "Uptown Lounge",
+      "status": "created",
+      "venueId": "uptown-lounge-5d5827eb",
+      "email": "colossaloneinc+uptown-lounge@gmail.com",
+      "address": "5706 Richmond Ave, Houston, TX 77057",
+      "neighborhood": "Galleria/Uptown"
+    },
+    {
+      "name": "Reset Rooftop Lounge",
+      "status": "created",
+      "venueId": "reset-e656d361",
+      "email": "colossaloneinc+reset@gmail.com",
+      "address": "606 Dennis St, Ste 200, Houston, TX 77006",
+      "neighborhood": "Midtown"
+    },
+    {
+      "name": "Spivey's Famous Bistro",
+      "status": "created",
+      "venueId": "spiveys-famous-bistro-031bd0bc",
+      "email": "colossaloneinc+spiveys-famous-bistro@gmail.com",
+      "address": "4913 Griggs Rd, Houston, TX 77021",
+      "neighborhood": "Third Ward"
+    },
+    {
+      "name": "The Original Red Rooster",
+      "status": "created",
+      "venueId": "red-rooster-2e49ad6c",
+      "email": "colossaloneinc+red-rooster@gmail.com",
+      "address": "13344 Almeda Rd, Houston, TX 77045",
+      "neighborhood": "Other"
+    },
+    {
+      "name": "Peachz",
+      "status": "created",
+      "venueId": "peachz-9ea8fe3c",
+      "email": "colossaloneinc+peachz@gmail.com",
+      "address": "2533 Southmore Blvd, Houston, TX 77004",
+      "neighborhood": "Third Ward"
+    }
+  ],
+  "errors": []
+}
