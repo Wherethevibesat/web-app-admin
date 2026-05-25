@@ -21,6 +21,8 @@ export function SettingsForm({ initial }: { initial: PlatformSettings }) {
         venue_submission_fee: form.venue_submission_fee,
         venue_listing_months: form.venue_listing_months,
         event_submission_fee: form.event_submission_fee,
+        event_ticket_commission_pct: form.event_ticket_commission_pct,
+        vip_commission_pct: form.vip_commission_pct,
         driver_listing_fee: form.driver_listing_fee,
         driver_listing_months: form.driver_listing_months,
         driver_booking_commission_pct: form.driver_booking_commission_pct,
@@ -97,6 +99,48 @@ export function SettingsForm({ initial }: { initial: PlatformSettings }) {
               setForm((f) => ({
                 ...f,
                 event_submission_fee: Number(e.target.value),
+              }))
+            }
+          />
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-wtva-dark-300 bg-wtva-card p-6 space-y-4">
+        <h2 className="font-semibold">Marketplace commissions</h2>
+        <p className="text-sm text-wtva-muted">
+          Percentage WTVA keeps from venue-owned ticket and VIP sales before Stripe sends the rest
+          to the venue owner's connected account.
+        </p>
+        <div>
+          <Label htmlFor="event_ticket_commission">Paid ticket commission (%)</Label>
+          <Input
+            id="event_ticket_commission"
+            type="number"
+            min={0}
+            max={100}
+            step={0.5}
+            value={form.event_ticket_commission_pct}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                event_ticket_commission_pct: Number(e.target.value),
+              }))
+            }
+          />
+        </div>
+        <div>
+          <Label htmlFor="vip_commission">VIP commission (%)</Label>
+          <Input
+            id="vip_commission"
+            type="number"
+            min={0}
+            max={100}
+            step={0.5}
+            value={form.vip_commission_pct}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                vip_commission_pct: Number(e.target.value),
               }))
             }
           />
