@@ -1,0 +1,68 @@
+{
+  "results": [
+    {
+      "title": "Chapman Sundays",
+      "venue": "Chapman & Kirby",
+      "status": "created",
+      "seriesId": "57684e9a-f8a8-4948-8dcd-939908e932fc",
+      "starts_at": "2026-05-31T12:00:00-05:00",
+      "until_date": "2026-12-31",
+      "count": 31
+    },
+    {
+      "title": "Night Shift Sundays",
+      "venue": "Privilege Rooftop Lounge",
+      "status": "created",
+      "seriesId": "d0187743-e4bf-460c-8ec5-8298ccc8c848",
+      "starts_at": "2026-05-31T17:00:00-05:00",
+      "until_date": "2026-12-31",
+      "count": 31
+    },
+    {
+      "title": "Rooftop Sundays / Seaside Sundays",
+      "venue": "Seaside Lounge HTX",
+      "status": "created",
+      "seriesId": "89f3def4-8196-4071-af44-279c1eba4645",
+      "starts_at": "2026-05-31T11:00:00-05:00",
+      "until_date": "2026-12-31",
+      "count": 31
+    },
+    {
+      "title": "Sunday Brunch",
+      "venue": "The Address",
+      "status": "created",
+      "seriesId": "eea8256f-8794-475e-8b5c-056f883520fd",
+      "starts_at": "2026-05-31T13:00:00-05:00",
+      "until_date": "2026-12-31",
+      "count": 31
+    },
+    {
+      "title": "Sundays at The Address",
+      "venue": "The Address",
+      "status": "created",
+      "seriesId": "cec7ca5a-8e41-478d-8de6-fce22a18c949",
+      "starts_at": "2026-05-31T15:00:00-05:00",
+      "until_date": "2026-12-31",
+      "count": 31
+    },
+    {
+      "title": "Savoy Sundays",
+      "venue": "The Savoy",
+      "status": "created",
+      "seriesId": "1b6d94c0-ef6b-4eb1-8d45-40cbad9ae44e",
+      "starts_at": "2026-05-31T12:00:00-05:00",
+      "until_date": "2026-12-31",
+      "count": 31
+    },
+    {
+      "title": "M&M Mondays",
+      "venue": "DND HTX",
+      "status": "created",
+      "seriesId": "8fa59d0d-7371-42a7-a636-cbedad6c9d1b",
+      "starts_at": "2026-06-01T17:00:00-05:00",
+      "until_date": "2026-12-31",
+      "count": 31
+    }
+  ],
+  "errors": []
+}

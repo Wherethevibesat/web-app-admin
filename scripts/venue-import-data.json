@@ -297,5 +297,56 @@
     "address": "2533 Southmore Blvd, Houston, TX 77004",
     "neighborhood": "Third Ward",
     "venue_type": "Bar"
+  },
+  {
+    "name": "The Nomad HTX",
+    "slugKey": "nomad-htx",
+    "address": "12970 Westheimer Rd, Houston, TX 77077",
+    "neighborhood": "Westchase",
+    "latitude": 29.735889,
+    "longitude": -95.6153051,
+    "venue_type": "Restaurant"
+  },
+  {
+    "name": "Shades Lounge",
+    "slugKey": "shades-lounge",
+    "address": "2025 Cypress Creek Pkwy, Houston, TX 77090",
+    "neighborhood": "Other",
+    "venue_type": "Bar"
+  },
+  {
+    "name": "Juliet Restaurant",
+    "slugKey": "juliet",
+    "address": "5857 Westheimer Rd, Houston, TX 77057",
+    "neighborhood": "Galleria/Uptown",
+    "phone": "(713) 324-8831",
+    "latitude": 29.7376698,
+    "longitude": -95.4828112,
+    "venue_type": "Restaurant"
+  },
+  {
+    "name": "One Night",
+    "slugKey": "one-night",
+    "address": "11581 S Wilcrest Dr, Houston, TX 77099",
+    "neighborhood": "Other",
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "Euphoria Lounge",
+    "slugKey": "euphoria-lounge",
+    "address": "21614 Aldine Westfield Rd, Humble, TX 77338",
+    "neighborhood": "Other",
+    "phone": "(800) 460-2686",
+    "latitude": 30.028313,
+    "longitude": -95.379662,
+    "venue_type": "Lounge"
+  },
+  {
+    "name": "The Domain Houston",
+    "slugKey": "the-domain",
+    "address": "8052 Westheimer Rd, Houston, TX 77063",
+    "neighborhood": "Westchase",
+    "phone": "(832) 986-8987",
+    "venue_type": "Lounge"
   }
 ]

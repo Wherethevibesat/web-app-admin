@@ -1,0 +1,79 @@
+[
+  {
+    "title": "Chapman Sundays",
+    "venueSlugKey": "chapman-kirby",
+    "firstDate": "2026-05-31",
+    "weekday": 0,
+    "startTime": "12:00",
+    "endTime": "22:00",
+    "untilDate": "2026-12-31",
+    "event_type": "Day Party",
+    "description": "Top 40s, Sunday Funday, brunch, and day party at Chapman & Kirby."
+  },
+  {
+    "title": "Night Shift Sundays",
+    "venueSlugKey": "privilege",
+    "firstDate": "2026-05-31",
+    "weekday": 0,
+    "startTime": "17:00",
+    "endTime": "02:00",
+    "untilDate": "2026-12-31",
+    "event_type": "Night Party",
+    "description": "Sunday rooftop party at Privilege hosted by The Night Shift."
+  },
+  {
+    "title": "Rooftop Sundays / Seaside Sundays",
+    "venueSlugKey": "seaside",
+    "firstDate": "2026-05-31",
+    "weekday": 0,
+    "startTime": "11:00",
+    "endTime": "22:00",
+    "untilDate": "2026-12-31",
+    "event_type": "Day Party",
+    "description": "\"Sunday on the Roof\" with rooftop brunch and day party vibes at Seaside Lounge HTX."
+  },
+  {
+    "title": "Sunday Brunch",
+    "venueSlugKey": "address",
+    "firstDate": "2026-05-31",
+    "weekday": 0,
+    "startTime": "13:00",
+    "endTime": "17:00",
+    "untilDate": "2026-12-31",
+    "event_type": "Brunch / Daytime",
+    "description": "Weekly Sunday brunch at The Address."
+  },
+  {
+    "title": "Sundays at The Address",
+    "venueSlugKey": "address",
+    "firstDate": "2026-05-31",
+    "weekday": 0,
+    "startTime": "15:00",
+    "endTime": "19:00",
+    "untilDate": "2026-12-31",
+    "event_type": "Day Party",
+    "description": "Weekly Sunday day party at The Address."
+  },
+  {
+    "title": "Savoy Sundays",
+    "venueSlugKey": "the-savoy",
+    "firstDate": "2026-05-31",
+    "weekday": 0,
+    "startTime": "12:00",
+    "endTime": "17:00",
+    "untilDate": "2026-12-31",
+    "event_type": "Brunch / Daytime",
+    "description": "Weekly Sunday brunch and day party at The Savoy."
+  },
+  {
+    "title": "M&M Mondays",
+    "venueSlugKey": "dnd",
+    "firstDate": "2026-06-01",
+    "weekday": 1,
+    "startTime": "17:00",
+    "endTime": "02:00",
+    "untilDate": "2026-12-31",
+    "event_type": "Night Party",
+    "description": "\"More Energy & More Vibes\" every Monday at DND HTX."
+  }
+]

@@ -30,6 +30,10 @@ function ownerAliasEmail(slugKey) {
   return `${local}+${slugKey}@${domain}`.toLowerCase();
 }
 
+function normalizeAddress(address) {
+  return (address ?? "").trim().toLowerCase();
+}
+
 function venueIdForOwner(ownerId, slugKey) {
   const suffix = ownerId.replace(/-/g, "").slice(0, 8);
   return `${slugKey}-${suffix}`;
@@ -110,8 +114,11 @@ async function main() {
     fs.readFileSync(path.join(__dirname, "venue-import-data.json"), "utf8"),
   );
 
-  const { data: existingVenues } = await admin.from("venues").select("id, name");
+  const { data: existingVenues } = await admin.from("venues").select("id, name, address");
   const existingNames = new Set((existingVenues ?? []).map((v) => v.name.toLowerCase()));
+  const existingAddresses = new Set(
+    (existingVenues ?? []).map((v) => normalizeAddress(v.address)).filter(Boolean),
+  );
 
   const results = [];
   const errors = [];
@@ -119,6 +126,10 @@ async function main() {
   for (const entry of venues) {
     if (existingNames.has(entry.name.toLowerCase())) {
       results.push({ name: entry.name, status: "skipped", reason: "already exists" });
+      continue;
+    }
+    if (entry.address && existingAddresses.has(normalizeAddress(entry.address))) {
+      results.push({ name: entry.name, status: "skipped", reason: "address already exists" });
       continue;
     }
 
@@ -184,6 +195,8 @@ async function main() {
         address: entry.address,
         neighborhood: entry.neighborhood,
       });
+      existingNames.add(entry.name.toLowerCase());
+      if (entry.address) existingAddresses.add(normalizeAddress(entry.address));
     } catch (err) {
       errors.push({ name: entry.name, error: err.message ?? String(err) });
     }
