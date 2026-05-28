@@ -2,10 +2,12 @@ import Link from "next/link";
 import { PageHeader } from "@/components/admin/page-header";
 import { VipPackagesTable } from "@/components/admin/vip-packages-table";
 import { Button } from "@/components/ui/button";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { listVipPackages } from "@/lib/admin/vip";
 import type { VipPackageRow } from "@/lib/types/database";
 
 export default async function VipPackagesPage() {
+  await requireAdminPage("vip_packages");
   let packages: VipPackageRow[] = [];
   let error: string | null = null;
 

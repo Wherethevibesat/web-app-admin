@@ -4,12 +4,14 @@ import { listPendingEvents } from "@/lib/admin/events";
 import { listUnpublishedVenues } from "@/lib/admin/venues";
 import { listPendingDriverCompanies } from "@/lib/admin/drivers";
 import { listPendingPromoterLinks, listPendingPromoterEvents } from "@/lib/admin/promoters";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 
 export default async function SubmissionsPage({
   searchParams,
 }: {
   searchParams: Promise<{ tab?: string }>;
 }) {
+  await requireAdminPage("submissions");
   const { tab: tabParam } = await searchParams;
   const tab =
     tabParam === "events" ||

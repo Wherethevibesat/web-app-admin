@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useConfirmDelete, useConfirm } from "@/components/ui/confirm-dialog";
+import { useConfirm } from "@/components/ui/confirm-dialog";
+import {
+  BulkActionBar,
+  SelectAllHeaderCell,
+  SelectRowCell,
+  useTableSelection,
+} from "@/components/admin/table-selection";
+import { useBulkRequest } from "@/components/admin/use-bulk-request";
 import {
   DataTable,
   DataTableBody,
@@ -14,6 +21,7 @@ import {
   DataTableHeaderCell,
   DataTableRow,
 } from "@/components/admin/data-table";
+import { ImpersonateButton } from "@/components/admin/impersonate-button";
 import type { VenueRow } from "@/lib/types/venue";
 
 function listingLabel(expiresAt: string | null | undefined, published: boolean | null | undefined) {
@@ -26,9 +34,11 @@ function listingLabel(expiresAt: string | null | undefined, published: boolean |
 
 export function VenuesTable({ venues }: { venues: VenueRow[] }) {
   const router = useRouter();
-  const confirmDelete = useConfirmDelete();
   const confirm = useConfirm();
   const [busy, setBusy] = useState<string | null>(null);
+  const ids = venues.map((v) => v.id);
+  const selection = useTableSelection(ids);
+  const bulk = useBulkRequest(selection.clearSelection);
 
   async function patchVenue(id: string, patch: Record<string, unknown>) {
     setBusy(id);
@@ -41,15 +51,11 @@ export function VenuesTable({ venues }: { venues: VenueRow[] }) {
     router.refresh();
   }
 
-  async function toggleFeatured(id: string, featured: boolean) {
-    await patchVenue(id, { featured: !featured });
-  }
-
   async function setPublished(id: string, name: string, published: boolean) {
     if (!published) {
       const ok = await confirm({
         title: "Deactivate venue?",
-        description: `"${name}" will be hidden from customers. The owner can still manage it in the business portal.`,
+        description: `"${name}" will be hidden from customers.`,
         confirmLabel: "Deactivate",
         variant: "danger",
       });
@@ -58,13 +64,7 @@ export function VenuesTable({ venues }: { venues: VenueRow[] }) {
     await patchVenue(id, { published });
   }
 
-  async function deleteVenue(id: string, name: string) {
-    if (!(await confirmDelete(name))) return;
-    setBusy(id);
-    await fetch(`/api/admin/venues/${id}`, { method: "DELETE" });
-    setBusy(null);
-    router.refresh();
-  }
+  const rowBusy = (id: string) => busy === id || bulk.busy;
 
   if (venues.length === 0) {
     return (
@@ -75,87 +75,181 @@ export function VenuesTable({ venues }: { venues: VenueRow[] }) {
   }
 
   return (
-    <DataTable>
-      <DataTableHead>
-        <tr>
-          <DataTableHeaderCell>Name</DataTableHeaderCell>
-          <DataTableHeaderCell>Type</DataTableHeaderCell>
-          <DataTableHeaderCell>Area</DataTableHeaderCell>
-          <DataTableHeaderCell>Tier</DataTableHeaderCell>
-          <DataTableHeaderCell>Status</DataTableHeaderCell>
-          <DataTableHeaderCell>Listing</DataTableHeaderCell>
-          <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
-        </tr>
-      </DataTableHead>
-      <DataTableBody>
-        {venues.map((v) => (
-          <DataTableRow key={v.id}>
-            <DataTableCell>
-              <Link href={`/venues/${v.id}/edit`} className="font-medium hover:underline">
-                {v.name}
-              </Link>
-              {v.featured && (
-                <Badge className="ml-2" variant="warning">
-                  Featured
-                </Badge>
-              )}
-            </DataTableCell>
-            <DataTableCell>{v.venue_type}</DataTableCell>
-            <DataTableCell>{v.neighborhood ?? "—"}</DataTableCell>
-            <DataTableCell className="capitalize">{v.subscription_tier ?? "—"}</DataTableCell>
-            <DataTableCell>
-              <div className="flex flex-wrap gap-1">
-                {v.verified && <Badge variant="success">Verified</Badge>}
-                {v.verification_status === "pending" && (
-                  <Badge variant="warning">Pending doc</Badge>
+    <>
+      <BulkActionBar
+        itemLabel="venues"
+        totalCount={venues.length}
+        selectedCount={selection.selectedCount}
+        allSelected={selection.allSelected}
+        busy={bulk.busy}
+        onSelectAll={selection.toggleAll}
+        onClear={selection.clearSelection}
+      >
+        <Button
+          className="px-3 py-1 text-xs"
+          disabled={bulk.busy}
+          onClick={() =>
+            bulk.post(
+              "/api/admin/venues/bulk",
+              { ids: selection.selectedIds, action: "publish" },
+              { confirm: { title: "Activate selected venues?", confirmLabel: "Activate" } },
+            )
+          }
+        >
+          Activate
+        </Button>
+        <Button
+          variant="secondary"
+          className="px-3 py-1 text-xs"
+          disabled={bulk.busy}
+          onClick={() =>
+            bulk.post(
+              "/api/admin/venues/bulk",
+              { ids: selection.selectedIds, action: "unpublish" },
+              {
+                confirm: {
+                  title: "Deactivate selected venues?",
+                  variant: "danger",
+                  confirmLabel: "Deactivate",
+                },
+              },
+            )
+          }
+        >
+          Deactivate
+        </Button>
+        <Button
+          variant="ghost"
+          className="px-3 py-1 text-xs"
+          disabled={bulk.busy}
+          onClick={() =>
+            bulk.post("/api/admin/venues/bulk", {
+              ids: selection.selectedIds,
+              action: "feature",
+            })
+          }
+        >
+          Feature
+        </Button>
+        <Button
+          variant="ghost"
+          className="px-3 py-1 text-xs"
+          disabled={bulk.busy}
+          onClick={() =>
+            bulk.post("/api/admin/venues/bulk", {
+              ids: selection.selectedIds,
+              action: "unfeature",
+            })
+          }
+        >
+          Unfeature
+        </Button>
+        <Button
+          variant="danger"
+          className="px-3 py-1 text-xs"
+          disabled={bulk.busy}
+          onClick={() =>
+            bulk.post(
+              "/api/admin/venues/bulk",
+              { ids: selection.selectedIds, action: "delete" },
+              { useDeleteConfirm: true, itemName: `${selection.selectedCount} venues` },
+            )
+          }
+        >
+          Delete
+        </Button>
+      </BulkActionBar>
+
+      <DataTable>
+        <DataTableHead>
+          <tr>
+            <SelectAllHeaderCell
+              checked={selection.allSelected}
+              disabled={bulk.busy}
+              onChange={selection.toggleAll}
+              label="Select all venues"
+            />
+            <DataTableHeaderCell>Name</DataTableHeaderCell>
+            <DataTableHeaderCell>Type</DataTableHeaderCell>
+            <DataTableHeaderCell>Area</DataTableHeaderCell>
+            <DataTableHeaderCell>Tier</DataTableHeaderCell>
+            <DataTableHeaderCell>Status</DataTableHeaderCell>
+            <DataTableHeaderCell>Listing</DataTableHeaderCell>
+            <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
+          </tr>
+        </DataTableHead>
+        <DataTableBody>
+          {venues.map((v) => (
+            <DataTableRow key={v.id}>
+              <SelectRowCell
+                id={v.id}
+                label={v.name}
+                checked={selection.selected.has(v.id)}
+                disabled={rowBusy(v.id)}
+                onChange={selection.toggleOne}
+              />
+              <DataTableCell>
+                <Link href={`/venues/${v.id}/edit`} className="font-medium hover:underline">
+                  {v.name}
+                </Link>
+                {v.featured && (
+                  <Badge className="ml-2" variant="warning">
+                    Featured
+                  </Badge>
                 )}
-                {v.published === false && <Badge variant="danger">Deactivated</Badge>}
-              </div>
-            </DataTableCell>
-            <DataTableCell className="text-sm text-wtva-muted">
-              {listingLabel(v.listing_expires_at, v.published)}
-            </DataTableCell>
-            <DataTableCell className="text-right">
-              <div className="flex flex-wrap justify-end gap-2">
-                {v.published !== false ? (
+              </DataTableCell>
+              <DataTableCell>{v.venue_type}</DataTableCell>
+              <DataTableCell>{v.neighborhood ?? "—"}</DataTableCell>
+              <DataTableCell className="capitalize">{v.subscription_tier ?? "—"}</DataTableCell>
+              <DataTableCell>
+                <div className="flex flex-wrap gap-1">
+                  {v.verified && <Badge variant="success">Verified</Badge>}
+                  {v.verification_status === "pending" && (
+                    <Badge variant="warning">Pending doc</Badge>
+                  )}
+                  {v.published === false && <Badge variant="danger">Deactivated</Badge>}
+                </div>
+              </DataTableCell>
+              <DataTableCell className="text-sm text-wtva-muted">
+                {listingLabel(v.listing_expires_at, v.published)}
+              </DataTableCell>
+              <DataTableCell className="text-right">
+                <div className="flex flex-wrap justify-end gap-2">
+                  {v.owner_id ? (
+                    <ImpersonateButton userId={v.owner_id} label="Login as owner" />
+                  ) : null}
+                  {v.published !== false ? (
+                    <Button
+                      variant="ghost"
+                      className="px-2 py-1 text-xs"
+                      disabled={rowBusy(v.id)}
+                      onClick={() => setPublished(v.id, v.name, false)}
+                    >
+                      Deactivate
+                    </Button>
+                  ) : (
+                    <Button
+                      className="px-2 py-1 text-xs"
+                      disabled={rowBusy(v.id)}
+                      onClick={() => setPublished(v.id, v.name, true)}
+                    >
+                      Activate
+                    </Button>
+                  )}
                   <Button
                     variant="ghost"
                     className="px-2 py-1 text-xs"
-                    disabled={busy === v.id}
-                    onClick={() => setPublished(v.id, v.name, false)}
+                    disabled={rowBusy(v.id)}
+                    onClick={() => patchVenue(v.id, { featured: !v.featured })}
                   >
-                    Deactivate
+                    {v.featured ? "Unfeature" : "Feature"}
                   </Button>
-                ) : (
-                  <Button
-                    className="px-2 py-1 text-xs"
-                    disabled={busy === v.id}
-                    onClick={() => setPublished(v.id, v.name, true)}
-                  >
-                    Activate
-                  </Button>
-                )}
-                <Button
-                  variant="ghost"
-                  className="px-2 py-1 text-xs"
-                  disabled={busy === v.id}
-                  onClick={() => toggleFeatured(v.id, !!v.featured)}
-                >
-                  {v.featured ? "Unfeature" : "Feature"}
-                </Button>
-                <Button
-                  variant="danger"
-                  className="px-2 py-1 text-xs"
-                  disabled={busy === v.id}
-                  onClick={() => deleteVenue(v.id, v.name)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </DataTableCell>
-          </DataTableRow>
-        ))}
-      </DataTableBody>
-    </DataTable>
+                </div>
+              </DataTableCell>
+            </DataTableRow>
+          ))}
+        </DataTableBody>
+      </DataTable>
+    </>
   );
 }

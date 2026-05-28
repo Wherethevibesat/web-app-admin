@@ -6,6 +6,7 @@ import { NeighborhoodSelect } from "@/components/admin/neighborhood-select";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select, Textarea } from "@/components/ui/input";
 import type { NeighborhoodRow } from "@/lib/types/neighborhood";
+import { ImpersonateButton } from "@/components/admin/impersonate-button";
 import {
   SUBSCRIPTION_TIERS,
   VENUE_TYPES,
@@ -202,6 +203,16 @@ export function VenueForm({
           onChange={(e) => update("owner_id", e.target.value)}
           placeholder="Optional"
         />
+        {form.owner_id?.trim() ? (
+          <div className="mt-3">
+            <ImpersonateButton userId={form.owner_id.trim()} label="Login as venue owner" />
+          </div>
+        ) : (
+          <p className="mt-2 text-xs text-wtva-muted">
+            Set an owner ID to open the business portal as that venue owner, or use{" "}
+            <span className="text-foreground">Users</span> and filter by venue owner role.
+          </p>
+        )}
       </div>
 
       <div className="flex flex-wrap gap-4">

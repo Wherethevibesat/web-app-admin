@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/admin/page-header";
 import { VenueForm } from "@/components/admin/venue-form";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { listNeighborhoods } from "@/lib/admin/neighborhoods";
 import { getVenue } from "@/lib/admin/venues";
 import { DEFAULT_CITY } from "@/lib/types/neighborhood";
@@ -10,6 +11,7 @@ export default async function EditVenuePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireAdminPage("venues");
   const { id } = await params;
   const [venue, neighborhoods] = await Promise.all([
     getVenue(id).catch(() => null),

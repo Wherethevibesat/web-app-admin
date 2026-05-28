@@ -77,6 +77,14 @@ export async function upsertEvent(form: EventFormData): Promise<string> {
   const admin = createAdminClient();
   const tiers = normalizeTicketTiers(form.ticket_tiers ?? []);
   const now = new Date().toISOString();
+  const featuredStartsAt =
+    form.homepage_featured && form.featured_starts_at
+      ? new Date(form.featured_starts_at).toISOString()
+      : null;
+  const featuredEndsAt =
+    form.homepage_featured && form.featured_ends_at
+      ? new Date(form.featured_ends_at).toISOString()
+      : null;
 
   if (form.id) {
     const payload = {
@@ -90,6 +98,9 @@ export async function upsertEvent(form: EventFormData): Promise<string> {
       image_url: form.image_url || null,
       status: form.status,
       featured: form.featured,
+      homepage_featured: form.homepage_featured,
+      featured_starts_at: featuredStartsAt,
+      featured_ends_at: featuredEndsAt,
       updated_at: now,
     };
     const { error } = await admin.from("events").update(payload).eq("id", form.id);
@@ -145,6 +156,9 @@ export async function upsertEvent(form: EventFormData): Promise<string> {
     image_url: form.image_url || null,
     status: form.status,
     featured: form.featured,
+    homepage_featured: form.homepage_featured,
+    featured_starts_at: featuredStartsAt,
+    featured_ends_at: featuredEndsAt,
     updated_at: now,
   }));
 

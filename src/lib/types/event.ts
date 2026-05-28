@@ -6,7 +6,12 @@ export const EVENT_TYPES = [
   "Night Party",
   "After Hours",
   "Brunch / Daytime",
+  "Happy Hours",
   "Live Music / DJ",
+  "Hookah Vibes",
+  "25 and Over",
+  "30 and Over",
+  "Upscale",
   "Private Event",
   "Other",
 ] as const;
@@ -34,6 +39,9 @@ export interface EventFormData {
   image_url: string;
   status: "draft" | "pending_review" | "published" | "cancelled";
   featured: boolean;
+  homepage_featured: boolean;
+  featured_starts_at?: string;
+  featured_ends_at?: string;
   additional_dates?: string[];
   recurrence?: EventRecurrenceInput | null;
   ticket_tiers?: TicketTierInput[];

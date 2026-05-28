@@ -2,10 +2,12 @@ import Link from "next/link";
 import { PageHeader } from "@/components/admin/page-header";
 import { EventsTable } from "@/components/admin/events-table";
 import { Button } from "@/components/ui/button";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { listEvents } from "@/lib/admin/events";
 import type { EventRow } from "@/lib/types/database";
 
 export default async function EventsPage() {
+  await requireAdminPage("events");
   let events: EventRow[] = [];
   let error: string | null = null;
 

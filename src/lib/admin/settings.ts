@@ -11,6 +11,9 @@ const DEFAULTS: PlatformSettings = {
   driver_listing_fee: 50,
   driver_listing_months: 3,
   driver_booking_commission_pct: 10,
+  featured_event_price: 75,
+  featured_event_days: 7,
+  featured_event_max_slots: 6,
   auto_approve_venues: false,
   auto_approve_events: false,
   require_payment: true,
@@ -39,6 +42,11 @@ export async function getPlatformSettings(): Promise<PlatformSettings> {
     driver_listing_months: Number(data.driver_listing_months ?? DEFAULTS.driver_listing_months),
     driver_booking_commission_pct: Number(
       data.driver_booking_commission_pct ?? DEFAULTS.driver_booking_commission_pct,
+    ),
+    featured_event_price: Number(data.featured_event_price ?? DEFAULTS.featured_event_price),
+    featured_event_days: Number(data.featured_event_days ?? DEFAULTS.featured_event_days),
+    featured_event_max_slots: Number(
+      data.featured_event_max_slots ?? DEFAULTS.featured_event_max_slots,
     ),
     auto_approve_venues: Boolean(data.auto_approve_venues ?? DEFAULTS.auto_approve_venues),
     auto_approve_events: Boolean(data.auto_approve_events ?? DEFAULTS.auto_approve_events),

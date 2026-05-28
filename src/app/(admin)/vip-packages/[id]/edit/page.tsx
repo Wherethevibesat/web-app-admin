@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/admin/page-header";
 import { VipPackageForm } from "@/components/admin/vip-package-form";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { listEvents } from "@/lib/admin/events";
 import { getVipPackage } from "@/lib/admin/vip";
 import { listVenues } from "@/lib/admin/venues";
@@ -10,6 +11,7 @@ export default async function EditVipPackagePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireAdminPage("vip_packages");
   const { id } = await params;
   const [pkg, venues, events] = await Promise.all([
     getVipPackage(id).catch(() => null),

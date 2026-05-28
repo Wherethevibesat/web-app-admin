@@ -50,6 +50,9 @@ function toForm(event?: EventRow | null, ticketTiers?: TicketTierInput[]): Event
     image_url: event?.image_url ?? "",
     status: (event?.status as EventFormData["status"]) ?? "pending_review",
     featured: event?.featured ?? false,
+    homepage_featured: event?.homepage_featured ?? false,
+    featured_starts_at: toLocalDatetime(event?.featured_starts_at),
+    featured_ends_at: toLocalDatetime(event?.featured_ends_at),
     additional_dates: [],
     recurrence: defaultRecurrence(),
     ticket_tiers:
@@ -259,6 +262,36 @@ export function EventForm({
         <input type="checkbox" checked={form.featured} onChange={(e) => update("featured", e.target.checked)} />
         Featured event
       </label>
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={form.homepage_featured}
+          onChange={(e) => update("homepage_featured", e.target.checked)}
+        />
+        Homepage featured slot (paid)
+      </label>
+      {form.homepage_featured && (
+        <div className="grid gap-4 sm:grid-cols-2 rounded-lg border border-wtva-dark-300 p-4">
+          <div>
+            <Label htmlFor="featured_starts_at">Featured starts</Label>
+            <Input
+              id="featured_starts_at"
+              type="datetime-local"
+              value={form.featured_starts_at ?? ""}
+              onChange={(e) => update("featured_starts_at", e.target.value)}
+            />
+          </div>
+          <div>
+            <Label htmlFor="featured_ends_at">Featured ends</Label>
+            <Input
+              id="featured_ends_at"
+              type="datetime-local"
+              value={form.featured_ends_at ?? ""}
+              onChange={(e) => update("featured_ends_at", e.target.value)}
+            />
+          </div>
+        </div>
+      )}
       {error && <p className="text-sm text-red-400">{error}</p>}
       <div className="flex gap-3">
         <Button type="submit" disabled={loading}>{loading ? "Saving…" : "Save event"}</Button>

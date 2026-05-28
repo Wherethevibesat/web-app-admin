@@ -1,7 +1,9 @@
 import { PageHeader } from "@/components/admin/page-header";
 import { NeighborhoodForm } from "@/components/admin/neighborhood-form";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 
-export default function NewNeighborhoodPage() {
+export default async function NewNeighborhoodPage() {
+  await requireAdminPage("neighborhoods");
   return (
     <div>
       <PageHeader

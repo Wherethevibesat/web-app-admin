@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/admin/page-header";
 import { DriversTable } from "@/components/admin/drivers-table";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { listDriverCompanies } from "@/lib/admin/drivers";
 
 export default async function DriversPage({
@@ -8,6 +9,7 @@ export default async function DriversPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
+  await requireAdminPage("drivers");
   const { q } = await searchParams;
   let drivers: Awaited<ReturnType<typeof listDriverCompanies>> = [];
   let error: string | null = null;

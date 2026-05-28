@@ -22,6 +22,9 @@ export interface PlatformSettings {
   driver_listing_fee: number;
   driver_listing_months: number;
   driver_booking_commission_pct: number;
+  featured_event_price: number;
+  featured_event_days: number;
+  featured_event_max_slots: number;
   auto_approve_venues: boolean;
   auto_approve_events: boolean;
   require_payment: boolean;
@@ -40,6 +43,9 @@ export interface EventRow {
   image_url: string | null;
   status: string;
   featured: boolean | null;
+  homepage_featured: boolean;
+  featured_starts_at: string | null;
+  featured_ends_at: string | null;
   created_at: string;
   venue?: { name: string } | null;
 }

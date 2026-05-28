@@ -6,6 +6,13 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
+  BulkActionBar,
+  SelectAllHeaderCell,
+  SelectRowCell,
+  useTableSelection,
+} from "@/components/admin/table-selection";
+import { useBulkRequest } from "@/components/admin/use-bulk-request";
+import {
   DataTable,
   DataTableBody,
   DataTableCell,
@@ -13,6 +20,7 @@ import {
   DataTableHeaderCell,
   DataTableRow,
 } from "@/components/admin/data-table";
+import { ImpersonateButton } from "@/components/admin/impersonate-button";
 import type { PromoterLinkSubmission } from "@/lib/admin/promoters";
 
 function statusVariant(status: string) {
@@ -24,6 +32,9 @@ function statusVariant(status: string) {
 export function PromotersTable({ links }: { links: PromoterLinkSubmission[] }) {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
+  const ids = links.map((l) => l.id);
+  const selection = useTableSelection(ids);
+  const bulk = useBulkRequest(selection.clearSelection);
 
   async function review(id: string, status: "approved" | "rejected") {
     setBusy(id);
@@ -35,6 +46,8 @@ export function PromotersTable({ links }: { links: PromoterLinkSubmission[] }) {
     setBusy(null);
     router.refresh();
   }
+
+  const rowBusy = (id: string) => busy === id || bulk.busy;
 
   if (links.length === 0) {
     return (
@@ -49,60 +62,111 @@ export function PromotersTable({ links }: { links: PromoterLinkSubmission[] }) {
   }
 
   return (
-    <DataTable>
-      <DataTableHead>
-        <tr>
-          <DataTableHeaderCell>Promoter</DataTableHeaderCell>
-          <DataTableHeaderCell>Venue</DataTableHeaderCell>
-          <DataTableHeaderCell>Status</DataTableHeaderCell>
-          <DataTableHeaderCell>Requested</DataTableHeaderCell>
-          <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
-        </tr>
-      </DataTableHead>
-      <DataTableBody>
-        {links.map((l) => (
-          <DataTableRow key={l.id}>
-            <DataTableCell>
-              <p className="font-medium">{l.promoter?.name ?? "-"}</p>
-              {l.promoter?.email && (
-                <p className="text-xs text-wtva-muted">{l.promoter.email}</p>
-              )}
-            </DataTableCell>
-            <DataTableCell>{l.venue?.name ?? l.venue_id}</DataTableCell>
-            <DataTableCell>
-              <Badge variant={statusVariant(l.status)} className="capitalize">
-                {l.status}
-              </Badge>
-            </DataTableCell>
-            <DataTableCell>
-              {new Date(l.requested_at).toLocaleDateString()}
-            </DataTableCell>
-            <DataTableCell className="text-right">
-              {l.status === "pending" ? (
-                <div className="flex justify-end gap-2">
-                  <Button
-                    disabled={busy === l.id}
-                    className="px-3 py-1 text-xs"
-                    onClick={() => review(l.id, "approved")}
-                  >
-                    Approve
-                  </Button>
-                  <Button
-                    disabled={busy === l.id}
-                    variant="ghost"
-                    className="px-3 py-1 text-xs"
-                    onClick={() => review(l.id, "rejected")}
-                  >
-                    Reject
-                  </Button>
+    <>
+      <BulkActionBar
+        itemLabel="links"
+        totalCount={links.length}
+        selectedCount={selection.selectedCount}
+        allSelected={selection.allSelected}
+        busy={bulk.busy}
+        onSelectAll={selection.toggleAll}
+        onClear={selection.clearSelection}
+      >
+        <Button
+          className="px-3 py-1 text-xs"
+          disabled={bulk.busy}
+          onClick={() =>
+            bulk.post("/api/admin/promoter-links/bulk", {
+              ids: selection.selectedIds,
+              action: "approve",
+            })
+          }
+        >
+          Approve
+        </Button>
+        <Button
+          variant="secondary"
+          className="px-3 py-1 text-xs"
+          disabled={bulk.busy}
+          onClick={() =>
+            bulk.post("/api/admin/promoter-links/bulk", {
+              ids: selection.selectedIds,
+              action: "reject",
+            })
+          }
+        >
+          Reject
+        </Button>
+      </BulkActionBar>
+
+      <DataTable>
+        <DataTableHead>
+          <tr>
+            <SelectAllHeaderCell
+              checked={selection.allSelected}
+              disabled={bulk.busy}
+              onChange={selection.toggleAll}
+            />
+            <DataTableHeaderCell>Promoter</DataTableHeaderCell>
+            <DataTableHeaderCell>Venue</DataTableHeaderCell>
+            <DataTableHeaderCell>Status</DataTableHeaderCell>
+            <DataTableHeaderCell>Requested</DataTableHeaderCell>
+            <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
+          </tr>
+        </DataTableHead>
+        <DataTableBody>
+          {links.map((l) => (
+            <DataTableRow key={l.id}>
+              <SelectRowCell
+                id={l.id}
+                label={l.promoter?.name ?? l.id}
+                checked={selection.selected.has(l.id)}
+                disabled={rowBusy(l.id)}
+                onChange={selection.toggleOne}
+              />
+              <DataTableCell>
+                <p className="font-medium">{l.promoter?.name ?? "-"}</p>
+                {l.promoter?.email && (
+                  <p className="text-xs text-wtva-muted">{l.promoter.email}</p>
+                )}
+              </DataTableCell>
+              <DataTableCell>{l.venue?.name ?? l.venue_id}</DataTableCell>
+              <DataTableCell>
+                <Badge variant={statusVariant(l.status)} className="capitalize">
+                  {l.status}
+                </Badge>
+              </DataTableCell>
+              <DataTableCell>
+                {new Date(l.requested_at).toLocaleDateString()}
+              </DataTableCell>
+              <DataTableCell className="text-right">
+                <div className="flex flex-wrap justify-end gap-2">
+                  <ImpersonateButton userId={l.promoter_id} />
+                  {l.status === "pending" ? (
+                    <>
+                      <Button
+                        disabled={rowBusy(l.id)}
+                        className="px-3 py-1 text-xs"
+                        onClick={() => review(l.id, "approved")}
+                      >
+                        Approve
+                      </Button>
+                      <Button
+                        disabled={rowBusy(l.id)}
+                        variant="ghost"
+                        className="px-3 py-1 text-xs"
+                        onClick={() => review(l.id, "rejected")}
+                      >
+                        Reject
+                      </Button>
+                    </>
+                  ) : null}
                 </div>
-              ) : (
-                "-"
-              )}
-            </DataTableCell>
-          </DataTableRow>
-        ))}
-      </DataTableBody>
-    </DataTable>
+              </DataTableCell>
+            </DataTableRow>
+          ))}
+        </DataTableBody>
+      </DataTable>
+    </>
   );
 }

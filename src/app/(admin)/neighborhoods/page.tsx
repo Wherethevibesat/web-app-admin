@@ -2,10 +2,12 @@ import Link from "next/link";
 import { PageHeader } from "@/components/admin/page-header";
 import { NeighborhoodsTable } from "@/components/admin/neighborhoods-table";
 import { Button } from "@/components/ui/button";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { listNeighborhoods } from "@/lib/admin/neighborhoods";
 import { DEFAULT_CITY, type NeighborhoodRow } from "@/lib/types/neighborhood";
 
 export default async function NeighborhoodsPage() {
+  await requireAdminPage("neighborhoods");
   let neighborhoods: NeighborhoodRow[] = [];
   let error: string | null = null;
 

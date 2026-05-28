@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/admin/page-header";
 import { NeighborhoodForm } from "@/components/admin/neighborhood-form";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { getNeighborhood } from "@/lib/admin/neighborhoods";
 
 export default async function EditNeighborhoodPage({
@@ -8,6 +9,7 @@ export default async function EditNeighborhoodPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireAdminPage("neighborhoods");
   const { id } = await params;
   const neighborhood = await getNeighborhood(id).catch(() => null);
 

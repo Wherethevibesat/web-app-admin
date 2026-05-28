@@ -9,9 +9,11 @@ import {
   DataTableHeaderCell,
   DataTableRow,
 } from "@/components/admin/data-table";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { listStripeAccounts } from "@/lib/admin/stripe";
 
 export default async function StripeAccountsPage() {
+  await requireAdminPage("settings");
   let accounts: Awaited<ReturnType<typeof listStripeAccounts>> = [];
   let error: string | null = null;
 

@@ -14,6 +14,7 @@ import { StatCard } from "@/components/admin/stat-card";
 import { ManagementCard } from "@/components/admin/management-card";
 import { formatCurrency } from "@/lib/utils";
 import type { DashboardStats } from "@/lib/types/database";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 
 async function getStatsDirect(): Promise<DashboardStats> {
   const { fetchDashboardStats } = await import("@/lib/admin/dashboard-stats");
@@ -35,6 +36,7 @@ async function getStatsDirect(): Promise<DashboardStats> {
 }
 
 export default async function DashboardPage() {
+  await requireAdminPage("dashboard");
   const supabase = await createClient();
   const {
     data: { user },

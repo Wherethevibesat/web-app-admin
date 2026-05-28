@@ -1,8 +1,10 @@
 import { PageHeader } from "@/components/admin/page-header";
 import { VerificationQueue } from "@/components/admin/verification-queue";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { listPendingVerification } from "@/lib/admin/venues";
 
 export default async function VerificationPage() {
+  await requireAdminPage("verification");
   const venues = await listPendingVerification().catch(() => []);
 
   return (

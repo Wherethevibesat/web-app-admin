@@ -1,5 +1,7 @@
 import { PageHeader } from "@/components/admin/page-header";
+import { AddAdminForm } from "@/components/admin/add-admin-form";
 import { UsersTable } from "@/components/admin/users-table";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { listUsers } from "@/lib/admin/users";
 
 export default async function UsersPage({
@@ -7,6 +9,7 @@ export default async function UsersPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
+  await requireAdminPage("users");
   const { q } = await searchParams;
   const users = await listUsers(q).catch(() => []);
 
@@ -16,6 +19,7 @@ export default async function UsersPage({
         title="Users"
         description="Manage accounts and change roles. Changes are audit-logged."
       />
+      <AddAdminForm />
       <form className="mb-6 max-w-md" method="get">
         <input
           name="q"

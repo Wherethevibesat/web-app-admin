@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/require-admin";
 import { logAdminAction } from "@/lib/admin/audit";
+import { ADMIN_PERMISSIONS } from "@/lib/admin/permissions";
 import { deleteUser, getUser, updateUser } from "@/lib/admin/users";
 import type { UserRole } from "@/lib/types/database";
 
@@ -8,7 +9,7 @@ export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireAdmin();
+  const auth = await requireAdmin("users");
   if (auth.error) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
@@ -18,11 +19,16 @@ export async function PATCH(
     name?: string;
     email?: string;
     role?: UserRole;
+    adminPermissions?: string[];
   };
 
   if (body.role && !["customer", "venueOwner", "admin", "driver", "promoter"].includes(body.role)) {
     return NextResponse.json({ error: "Invalid role" }, { status: 400 });
   }
+
+  const adminPermissions = Array.isArray(body.adminPermissions)
+    ? body.adminPermissions.filter((perm) => ADMIN_PERMISSIONS.includes(perm as never))
+    : undefined;
 
   try {
     const before = await getUser(id);
@@ -30,6 +36,7 @@ export async function PATCH(
       name: body.name,
       email: body.email,
       role: body.role,
+      adminPermissions,
     });
     await logAdminAction({
       adminId: auth.user!.id,
@@ -49,7 +56,7 @@ export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireAdmin();
+  const auth = await requireAdmin("users");
   if (auth.error) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
   }

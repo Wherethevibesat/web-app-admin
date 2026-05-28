@@ -2,10 +2,12 @@ import Link from "next/link";
 import { PageHeader } from "@/components/admin/page-header";
 import { AddPromoterForm } from "@/components/admin/add-promoter-form";
 import { PromotersTable } from "@/components/admin/promoters-table";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { listAllPromoterLinks, listPromoterUsers } from "@/lib/admin/promoters";
 import { listVenues } from "@/lib/admin/venues";
 
 export default async function PromotersPage() {
+  await requireAdminPage("promoters");
   let links: Awaited<ReturnType<typeof listAllPromoterLinks>> = [];
   let promoters: Awaited<ReturnType<typeof listPromoterUsers>> = [];
   let venues: Awaited<ReturnType<typeof listVenues>> = [];

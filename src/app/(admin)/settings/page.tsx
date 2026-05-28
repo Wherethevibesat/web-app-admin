@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/admin/page-header";
 import { SettingsForm } from "@/components/admin/settings-form";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { getPlatformSettings } from "@/lib/admin/settings";
 
 export default async function SettingsPage() {
+  await requireAdminPage("settings");
   const settings = await getPlatformSettings().catch(() => ({
     id: 1,
     venue_submission_fee: 50,
@@ -14,6 +16,9 @@ export default async function SettingsPage() {
     driver_listing_fee: 50,
     driver_listing_months: 3,
     driver_booking_commission_pct: 10,
+    featured_event_price: 75,
+    featured_event_days: 7,
+    featured_event_max_slots: 6,
     auto_approve_venues: false,
     auto_approve_events: false,
     require_payment: true,

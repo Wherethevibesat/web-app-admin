@@ -2,10 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { AdminPermissionsFields } from "@/components/admin/admin-permissions-fields";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import { Input, Label, Select } from "@/components/ui/input";
+import { ImpersonateButton } from "@/components/admin/impersonate-button";
 import type { UserProfile, UserRole } from "@/lib/types/database";
+
+const BUSINESS_ROLES: UserRole[] = ["venueOwner", "driver", "promoter"];
 
 export function UserForm({ user }: { user: UserProfile }) {
   const router = useRouter();
@@ -13,6 +17,11 @@ export function UserForm({ user }: { user: UserProfile }) {
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [role, setRole] = useState<UserRole>(user.role);
+  const [adminPermissions, setAdminPermissions] = useState<string[]>(
+    Array.isArray(user.metadata?.adminPermissions)
+      ? (user.metadata.adminPermissions as string[])
+      : ["all"],
+  );
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +33,12 @@ export function UserForm({ user }: { user: UserProfile }) {
     const res = await fetch(`/api/admin/users/${user.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, role }),
+      body: JSON.stringify({
+        name,
+        email,
+        role,
+        adminPermissions: role === "admin" ? adminPermissions : undefined,
+      }),
     });
     setLoading(false);
     if (!res.ok) {
@@ -59,6 +73,16 @@ export function UserForm({ user }: { user: UserProfile }) {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-lg space-y-4">
+      {BUSINESS_ROLES.includes(user.role) && (
+        <div className="rounded-lg border border-wtva-dark-300 bg-wtva-card p-4">
+          <p className="text-sm text-wtva-muted">
+            Open the business portal signed in as this user (opens in a new tab).
+          </p>
+          <div className="mt-3">
+            <ImpersonateButton userId={user.id} />
+          </div>
+        </div>
+      )}
       <div>
         <Label htmlFor="name">Name</Label>
         <Input
@@ -96,6 +120,14 @@ export function UserForm({ user }: { user: UserProfile }) {
       <p className="text-sm text-wtva-muted">
         Points: {user.total_points ?? 0} · User ID: {user.id}
       </p>
+      {role === "admin" && (
+        <div>
+          <Label>Admin permissions</Label>
+          <div className="mt-2 rounded-lg border border-wtva-dark-300 p-3">
+            <AdminPermissionsFields value={adminPermissions} onChange={setAdminPermissions} />
+          </div>
+        </div>
+      )}
       {error && <p className="text-sm text-red-400">{error}</p>}
       <div className="flex flex-wrap gap-3 pt-2">
         <Button type="submit" disabled={loading || deleting}>

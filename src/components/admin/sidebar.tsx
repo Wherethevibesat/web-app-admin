@@ -18,25 +18,30 @@ import {
   Settings,
   Star,
   Users,
+  UserRound,
+  MessageSquare,
 } from "lucide-react";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import type { AdminPermission } from "@/lib/admin/permissions";
 
 const navItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/venues", label: "Venues", icon: Building2 },
-  { href: "/neighborhoods", label: "Neighborhoods", icon: MapPin },
-  { href: "/events", label: "Events", icon: Calendar },
-  { href: "/drivers", label: "Drivers", icon: Car },
-  { href: "/promoters", label: "Promoters", icon: Megaphone },
-  { href: "/users", label: "Users", icon: Users },
-  { href: "/submissions", label: "Submissions", icon: FileCheck },
-  { href: "/submissions/verification", label: "Verification", icon: BadgeCheck },
-  { href: "/vip-packages", label: "VIP Packages", icon: Star },
-  { href: "/earnings", label: "Earnings", icon: DollarSign },
-  { href: "/settings", label: "Settings", icon: Settings },
+  { href: "/", label: "Dashboard", icon: LayoutDashboard, permission: "dashboard" as AdminPermission },
+  { href: "/venues", label: "Venues", icon: Building2, permission: "venues" as AdminPermission },
+  { href: "/neighborhoods", label: "Neighborhoods", icon: MapPin, permission: "neighborhoods" as AdminPermission },
+  { href: "/events", label: "Events", icon: Calendar, permission: "events" as AdminPermission },
+  { href: "/drivers", label: "Drivers", icon: Car, permission: "drivers" as AdminPermission },
+  { href: "/promoters", label: "Promoters", icon: Megaphone, permission: "promoters" as AdminPermission },
+  { href: "/customers", label: "Customers", icon: UserRound, permission: "customers" as AdminPermission },
+  { href: "/messages", label: "Messages", icon: MessageSquare, permission: "messages" as AdminPermission },
+  { href: "/users", label: "Users", icon: Users, permission: "users" as AdminPermission },
+  { href: "/submissions", label: "Submissions", icon: FileCheck, permission: "submissions" as AdminPermission },
+  { href: "/submissions/verification", label: "Verification", icon: BadgeCheck, permission: "verification" as AdminPermission },
+  { href: "/vip-packages", label: "VIP Packages", icon: Star, permission: "vip_packages" as AdminPermission },
+  { href: "/earnings", label: "Earnings", icon: DollarSign, permission: "earnings" as AdminPermission },
+  { href: "/settings", label: "Settings", icon: Settings, permission: "settings" as AdminPermission },
 ] as const;
 
 const navHrefs = navItems.map((item) => item.href);
@@ -55,10 +60,14 @@ function isNavItemActive(pathname: string, href: string): boolean {
   return !hasMoreSpecificMatch;
 }
 
-export function AdminSidebar() {
+export function AdminSidebar({ permissions }: { permissions: string[] }) {
   const pathname = usePathname();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
+  const allowed = new Set(permissions);
+  const visibleItems = navItems.filter(
+    (item) => allowed.has("all") || allowed.has(item.permission),
+  );
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -98,7 +107,7 @@ export function AdminSidebar() {
       </div>
 
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-        {navItems.map(({ href, label, icon: Icon }) => {
+        {visibleItems.map(({ href, label, icon: Icon }) => {
           const active = isNavItemActive(pathname, href);
           return (
             <Link

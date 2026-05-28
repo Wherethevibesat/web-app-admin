@@ -5,13 +5,15 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useConfirmDelete } from "@/components/ui/confirm-dialog";
-import { TableCheckbox } from "@/components/ui/table-checkbox";
 import {
-  EventBulkApproveBar,
-  useBulkApproveEvents,
-  usePendingEventSelection,
-} from "@/components/admin/event-bulk-approve";
+  BulkActionBar,
+  SelectAllHeaderCell,
+  SelectRowCell,
+  useTableSelection,
+} from "@/components/admin/table-selection";
+import { useBulkRequest } from "@/components/admin/use-bulk-request";
 import {
   DataTable,
   DataTableBody,
@@ -32,10 +34,12 @@ function statusBadgeVariant(status: string): "success" | "warning" | "danger" | 
 
 export function EventsTable({ events }: { events: EventRow[] }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const confirmDelete = useConfirmDelete();
   const [busy, setBusy] = useState<string | null>(null);
-  const selection = usePendingEventSelection(events);
-  const bulk = useBulkApproveEvents(selection.clearSelection);
+  const ids = events.map((e) => e.id);
+  const selection = useTableSelection(ids);
+  const bulk = useBulkRequest(selection.clearSelection);
 
   async function remove(id: string, title: string) {
     if (!(await confirmDelete(title))) return;
@@ -45,46 +49,124 @@ export function EventsTable({ events }: { events: EventRow[] }) {
     router.refresh();
   }
 
+  async function activatePaidFeature(id: string, title: string) {
+    const ok = await confirm({
+      title: "Activate paid homepage feature?",
+      description:
+        `Charge and activate homepage featured slot for "${title}" using current settings.`,
+      confirmLabel: "Activate",
+    });
+    if (!ok) return;
+    setBusy(id);
+    const res = await fetch(`/api/admin/events/${id}/feature`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "activate_paid" }),
+    });
+    setBusy(null);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      alert(body.error ?? "Activation failed");
+      return;
+    }
+    router.refresh();
+  }
+
+  async function deactivateFeature(id: string) {
+    setBusy(id);
+    const res = await fetch(`/api/admin/events/${id}/feature`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "deactivate" }),
+    });
+    setBusy(null);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      alert(body.error ?? "Update failed");
+      return;
+    }
+    router.refresh();
+  }
+
   if (events.length === 0) {
     return <p className="text-wtva-muted">No events yet. Create one to get started.</p>;
   }
 
-  const isRowBusy = (id: string) => busy === id || bulk.busy;
-  const hasPending = selection.pendingIds.length > 0;
+  const rowBusy = (id: string) => busy === id || bulk.busy;
 
   return (
     <>
-      <EventBulkApproveBar
-        pendingCount={selection.pendingIds.length}
+      <BulkActionBar
+        itemLabel="events"
+        totalCount={events.length}
         selectedCount={selection.selectedCount}
-        allPendingSelected={selection.allPendingSelected}
+        allSelected={selection.allSelected}
         busy={bulk.busy}
         onSelectAll={selection.toggleAll}
-        onApprove={() => bulk.approveSelected([...selection.selected])}
         onClear={selection.clearSelection}
-      />
-
-      {!hasPending && (
-        <p className="mb-4 text-sm text-wtva-muted">
-          Bulk approve checkboxes appear when events are in{" "}
-          <span className="text-amber-300">pending_review</span> status.
-        </p>
-      )}
+      >
+        <Button
+          className="px-3 py-1 text-xs"
+          disabled={bulk.busy}
+          onClick={() =>
+            bulk.post(
+              "/api/admin/events/bulk-status",
+              { ids: selection.selectedIds, status: "published" },
+              {
+                confirm: {
+                  title: `Publish ${selection.selectedCount} event(s)?`,
+                  confirmLabel: "Publish",
+                },
+              },
+            )
+          }
+        >
+          Publish
+        </Button>
+        <Button
+          variant="secondary"
+          className="px-3 py-1 text-xs"
+          disabled={bulk.busy}
+          onClick={() =>
+            bulk.post(
+              "/api/admin/events/bulk-status",
+              { ids: selection.selectedIds, status: "cancelled" },
+              {
+                confirm: {
+                  title: `Cancel ${selection.selectedCount} event(s)?`,
+                  variant: "danger",
+                  confirmLabel: "Cancel events",
+                },
+              },
+            )
+          }
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="danger"
+          className="px-3 py-1 text-xs"
+          disabled={bulk.busy}
+          onClick={() =>
+            bulk.post(
+              "/api/admin/events/bulk-delete",
+              { ids: selection.selectedIds },
+              { useDeleteConfirm: true, itemName: `${selection.selectedCount} events` },
+            )
+          }
+        >
+          Delete
+        </Button>
+      </BulkActionBar>
 
       <DataTable>
         <DataTableHead>
           <tr>
-            <DataTableHeaderCell className="w-12">
-              {hasPending ? (
-                <TableCheckbox
-                  checked={selection.allPendingSelected}
-                  onChange={(e) => selection.toggleAll(e.target.checked)}
-                  aria-label="Select all pending events"
-                />
-              ) : (
-                <span className="sr-only">Select</span>
-              )}
-            </DataTableHeaderCell>
+            <SelectAllHeaderCell
+              checked={selection.allSelected}
+              disabled={bulk.busy}
+              onChange={selection.toggleAll}
+            />
             <DataTableHeaderCell>Title</DataTableHeaderCell>
             <DataTableHeaderCell>Venue</DataTableHeaderCell>
             <DataTableHeaderCell>Starts</DataTableHeaderCell>
@@ -97,24 +179,23 @@ export function EventsTable({ events }: { events: EventRow[] }) {
             const pending = e.status === "pending_review";
             return (
               <DataTableRow key={e.id}>
-                <DataTableCell>
-                  <TableCheckbox
-                    checked={selection.selected.has(e.id)}
-                    disabled={!pending || isRowBusy(e.id)}
-                    onChange={(ev) => selection.toggleOne(e.id, ev.target.checked)}
-                    aria-label={pending ? `Select ${e.title}` : `${e.title} is not pending review`}
-                    title={
-                      pending
-                        ? "Select for bulk approve"
-                        : "Only pending_review events can be selected"
-                    }
-                  />
-                </DataTableCell>
+                <SelectRowCell
+                  id={e.id}
+                  label={e.title}
+                  checked={selection.selected.has(e.id)}
+                  disabled={rowBusy(e.id)}
+                  onChange={selection.toggleOne}
+                />
                 <DataTableCell>
                   <Link href={`/events/${e.id}/edit`} className="font-medium hover:underline">
                     {e.title}
                   </Link>
                   {e.featured && <Badge className="ml-2" variant="warning">Featured</Badge>}
+                  {e.homepage_featured && (
+                    <Badge className="ml-2" variant="success">
+                      Homepage Featured
+                    </Badge>
+                  )}
                 </DataTableCell>
                 <DataTableCell>{e.venue?.name ?? "—"}</DataTableCell>
                 <DataTableCell>{new Date(e.starts_at).toLocaleString()}</DataTableCell>
@@ -124,16 +205,35 @@ export function EventsTable({ events }: { events: EventRow[] }) {
                 <DataTableCell className="text-right">
                   {pending && (
                     <div className="mb-2">
-                      <EventReviewActions eventId={e.id} disabled={isRowBusy(e.id)} compact />
+                      <EventReviewActions eventId={e.id} disabled={rowBusy(e.id)} compact />
                     </div>
                   )}
                   <Link href={`/events/${e.id}/edit`}>
                     <Button variant="ghost" className="px-2 py-1 text-xs">Edit</Button>
                   </Link>
+                  {e.homepage_featured ? (
+                    <Button
+                      variant="secondary"
+                      className="ml-2 px-2 py-1 text-xs"
+                      disabled={rowBusy(e.id)}
+                      onClick={() => deactivateFeature(e.id)}
+                    >
+                      Remove homepage feature
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="secondary"
+                      className="ml-2 px-2 py-1 text-xs"
+                      disabled={rowBusy(e.id)}
+                      onClick={() => activatePaidFeature(e.id, e.title)}
+                    >
+                      Activate paid homepage feature
+                    </Button>
+                  )}
                   <Button
                     variant="danger"
                     className="ml-2 px-2 py-1 text-xs"
-                    disabled={isRowBusy(e.id)}
+                    disabled={rowBusy(e.id)}
                     onClick={() => remove(e.id, e.title)}
                   >
                     Delete

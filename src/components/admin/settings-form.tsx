@@ -26,6 +26,9 @@ export function SettingsForm({ initial }: { initial: PlatformSettings }) {
         driver_listing_fee: form.driver_listing_fee,
         driver_listing_months: form.driver_listing_months,
         driver_booking_commission_pct: form.driver_booking_commission_pct,
+        featured_event_price: form.featured_event_price,
+        featured_event_days: form.featured_event_days,
+        featured_event_max_slots: form.featured_event_max_slots,
         auto_approve_venues: form.auto_approve_venues,
         auto_approve_events: form.auto_approve_events,
         require_payment: form.require_payment,
@@ -141,6 +144,61 @@ export function SettingsForm({ initial }: { initial: PlatformSettings }) {
               setForm((f) => ({
                 ...f,
                 vip_commission_pct: Number(e.target.value),
+              }))
+            }
+          />
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-wtva-dark-300 bg-wtva-card p-6 space-y-4">
+        <h2 className="font-semibold">Homepage featured events (paid)</h2>
+        <p className="text-sm text-wtva-muted">
+          Pricing and duration used when activating paid homepage featured placements.
+        </p>
+        <div>
+          <Label htmlFor="featured_event_price">Featured event price ($)</Label>
+          <Input
+            id="featured_event_price"
+            type="number"
+            min={0}
+            step={1}
+            value={form.featured_event_price}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                featured_event_price: Number(e.target.value),
+              }))
+            }
+          />
+        </div>
+        <div>
+          <Label htmlFor="featured_event_days">Featured duration (days)</Label>
+          <Input
+            id="featured_event_days"
+            type="number"
+            min={1}
+            step={1}
+            value={form.featured_event_days}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                featured_event_days: Number(e.target.value),
+              }))
+            }
+          />
+        </div>
+        <div>
+          <Label htmlFor="featured_event_max_slots">Max concurrent slots</Label>
+          <Input
+            id="featured_event_max_slots"
+            type="number"
+            min={1}
+            step={1}
+            value={form.featured_event_max_slots}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                featured_event_max_slots: Number(e.target.value),
               }))
             }
           />

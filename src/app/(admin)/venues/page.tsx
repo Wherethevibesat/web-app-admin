@@ -2,6 +2,7 @@ import Link from "next/link";
 import { PageHeader } from "@/components/admin/page-header";
 import { VenuesTable } from "@/components/admin/venues-table";
 import { Button } from "@/components/ui/button";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { listVenues } from "@/lib/admin/venues";
 import type { VenueRow } from "@/lib/types/venue";
 
@@ -10,6 +11,7 @@ export default async function VenuesPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
+  await requireAdminPage("venues");
   const { q } = await searchParams;
   let venues: VenueRow[] = [];
   let error: string | null = null;

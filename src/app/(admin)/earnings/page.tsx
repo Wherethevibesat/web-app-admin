@@ -11,8 +11,10 @@ import {
 } from "@/components/admin/data-table";
 import { formatCurrency } from "@/lib/utils";
 import { listTransactions } from "@/lib/admin/stripe";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 
 export default async function EarningsPage() {
+  await requireAdminPage("earnings");
   let total = 0;
   let pending = 0;
   let rows: Awaited<ReturnType<typeof listTransactions>> = [];

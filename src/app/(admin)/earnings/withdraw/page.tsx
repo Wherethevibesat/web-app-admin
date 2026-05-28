@@ -12,8 +12,10 @@ import {
 } from "@/components/admin/data-table";
 import { formatCurrency } from "@/lib/utils";
 import { listWithdrawals } from "@/lib/admin/stripe";
+import { requireAdminPage } from "@/lib/admin/require-admin-page";
 
 export default async function WithdrawPage() {
+  await requireAdminPage("earnings");
   const withdrawals = await listWithdrawals().catch(() => []);
 
   return (

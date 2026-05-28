@@ -13,17 +13,19 @@ import {
   DataTableHeaderCell,
   DataTableRow,
 } from "@/components/admin/data-table";
+import { ImpersonateButton } from "@/components/admin/impersonate-button";
 import type { VenueRow } from "@/lib/types/venue";
 import type { EventRow } from "@/lib/types/database";
 import type { DriverCompanySubmission } from "@/lib/admin/drivers";
 import type { PromoterLinkSubmission } from "@/lib/admin/promoters";
 import { EventReviewActions } from "@/components/admin/event-review-actions";
-import { TableCheckbox } from "@/components/ui/table-checkbox";
 import {
-  EventBulkApproveBar,
-  useBulkApproveEvents,
-  usePendingEventSelection,
-} from "@/components/admin/event-bulk-approve";
+  BulkActionBar,
+  SelectAllHeaderCell,
+  SelectRowCell,
+  useTableSelection,
+} from "@/components/admin/table-selection";
+import { useBulkRequest } from "@/components/admin/use-bulk-request";
 
 export function SubmissionsTabs({
   venues,
@@ -42,8 +44,21 @@ export function SubmissionsTabs({
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
-  const selection = usePendingEventSelection(events);
-  const bulk = useBulkApproveEvents(selection.clearSelection);
+  const venueIds = venues.map((v) => v.id);
+  const eventIds = events.map((e) => e.id);
+  const driverIds = drivers.map((d) => d.id);
+  const linkIds = promoterLinks.map((l) => l.id);
+  const promoterEventIds = promoterEvents.map((e) => (e as { id: string }).id);
+  const venueSelection = useTableSelection(venueIds);
+  const eventSelection = useTableSelection(eventIds);
+  const driverSelection = useTableSelection(driverIds);
+  const linkSelection = useTableSelection(linkIds);
+  const promoterEventSelection = useTableSelection(promoterEventIds);
+  const venueBulk = useBulkRequest(venueSelection.clearSelection);
+  const eventBulk = useBulkRequest(eventSelection.clearSelection);
+  const driverBulk = useBulkRequest(driverSelection.clearSelection);
+  const linkBulk = useBulkRequest(linkSelection.clearSelection);
+  const promoterEventBulk = useBulkRequest(promoterEventSelection.clearSelection);
 
   async function publishVenue(id: string) {
     setBusy(id);
@@ -138,67 +153,119 @@ export function SubmissionsTabs({
         venues.length === 0 ? (
           <p className="text-wtva-muted">No unpublished venue submissions.</p>
         ) : (
-          <DataTable>
-            <DataTableHead>
-              <tr>
-                <DataTableHeaderCell>Name</DataTableHeaderCell>
-                <DataTableHeaderCell>Type</DataTableHeaderCell>
-                <DataTableHeaderCell>Area</DataTableHeaderCell>
-                <DataTableHeaderCell>Listing expires</DataTableHeaderCell>
-                <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
-              </tr>
-            </DataTableHead>
-            <DataTableBody>
-              {venues.map((v) => (
-                <DataTableRow key={v.id}>
-                  <DataTableCell>{v.name}</DataTableCell>
-                  <DataTableCell>{v.venue_type}</DataTableCell>
-                  <DataTableCell>{v.neighborhood ?? "-"}</DataTableCell>
-                  <DataTableCell>
-                    {v.listing_expires_at
-                      ? new Date(v.listing_expires_at).toLocaleDateString()
-                      : v.listing_paid_at
-                        ? "-"
-                        : "Not paid"}
-                  </DataTableCell>
-                  <DataTableCell className="text-right">
-                    <Button
-                      disabled={busy === v.id}
-                      className="px-3 py-1 text-xs"
-                      onClick={() => publishVenue(v.id)}
-                    >
-                      Approve & publish
-                    </Button>
-                  </DataTableCell>
-                </DataTableRow>
-              ))}
-            </DataTableBody>
-          </DataTable>
+          <>
+            <BulkActionBar
+              itemLabel="venues"
+              totalCount={venues.length}
+              selectedCount={venueSelection.selectedCount}
+              allSelected={venueSelection.allSelected}
+              busy={venueBulk.busy}
+              onSelectAll={venueSelection.toggleAll}
+              onClear={venueSelection.clearSelection}
+            >
+              <Button
+                className="px-3 py-1 text-xs"
+                disabled={venueBulk.busy}
+                onClick={() =>
+                  venueBulk.post("/api/admin/venues/bulk", {
+                    ids: venueSelection.selectedIds,
+                    action: "publish",
+                  })
+                }
+              >
+                Approve & publish
+              </Button>
+            </BulkActionBar>
+            <DataTable>
+              <DataTableHead>
+                <tr>
+                  <SelectAllHeaderCell
+                    checked={venueSelection.allSelected}
+                    disabled={venueBulk.busy}
+                    onChange={venueSelection.toggleAll}
+                  />
+                  <DataTableHeaderCell>Name</DataTableHeaderCell>
+                  <DataTableHeaderCell>Type</DataTableHeaderCell>
+                  <DataTableHeaderCell>Area</DataTableHeaderCell>
+                  <DataTableHeaderCell>Listing expires</DataTableHeaderCell>
+                  <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
+                </tr>
+              </DataTableHead>
+              <DataTableBody>
+                {venues.map((v) => (
+                  <DataTableRow key={v.id}>
+                    <SelectRowCell
+                      id={v.id}
+                      label={v.name}
+                      checked={venueSelection.selected.has(v.id)}
+                      disabled={busy === v.id || venueBulk.busy}
+                      onChange={venueSelection.toggleOne}
+                    />
+                    <DataTableCell>{v.name}</DataTableCell>
+                    <DataTableCell>{v.venue_type}</DataTableCell>
+                    <DataTableCell>{v.neighborhood ?? "-"}</DataTableCell>
+                    <DataTableCell>
+                      {v.listing_expires_at
+                        ? new Date(v.listing_expires_at).toLocaleDateString()
+                        : v.listing_paid_at
+                          ? "-"
+                          : "Not paid"}
+                    </DataTableCell>
+                    <DataTableCell className="text-right">
+                      <div className="flex flex-wrap justify-end gap-2">
+                        {v.owner_id ? (
+                          <ImpersonateButton userId={v.owner_id} label="Login as owner" />
+                        ) : null}
+                        <Button
+                          disabled={busy === v.id || venueBulk.busy}
+                          className="px-3 py-1 text-xs"
+                          onClick={() => publishVenue(v.id)}
+                        >
+                          Approve & publish
+                        </Button>
+                      </div>
+                    </DataTableCell>
+                  </DataTableRow>
+                ))}
+              </DataTableBody>
+            </DataTable>
+          </>
         )
       ) : tab === "events" ? (
         events.length === 0 ? (
           <p className="text-wtva-muted">No pending events.</p>
         ) : (
           <>
-            <EventBulkApproveBar
-              pendingCount={selection.pendingIds.length}
-              selectedCount={selection.selectedCount}
-              allPendingSelected={selection.allPendingSelected}
-              busy={bulk.busy}
-              onSelectAll={selection.toggleAll}
-              onApprove={() => bulk.approveSelected([...selection.selected])}
-              onClear={selection.clearSelection}
-            />
+            <BulkActionBar
+              itemLabel="events"
+              totalCount={events.length}
+              selectedCount={eventSelection.selectedCount}
+              allSelected={eventSelection.allSelected}
+              busy={eventBulk.busy}
+              onSelectAll={eventSelection.toggleAll}
+              onClear={eventSelection.clearSelection}
+            >
+              <Button
+                className="px-3 py-1 text-xs"
+                disabled={eventBulk.busy}
+                onClick={() =>
+                  eventBulk.post("/api/admin/events/bulk-status", {
+                    ids: eventSelection.selectedIds,
+                    status: "published",
+                  })
+                }
+              >
+                Approve & publish
+              </Button>
+            </BulkActionBar>
             <DataTable>
               <DataTableHead>
                 <tr>
-                  <DataTableHeaderCell className="w-12">
-                    <TableCheckbox
-                      checked={selection.allPendingSelected}
-                      onChange={(e) => selection.toggleAll(e.target.checked)}
-                      aria-label="Select all pending events"
-                    />
-                  </DataTableHeaderCell>
+                  <SelectAllHeaderCell
+                    checked={eventSelection.allSelected}
+                    disabled={eventBulk.busy}
+                    onChange={eventSelection.toggleAll}
+                  />
                   <DataTableHeaderCell>Title</DataTableHeaderCell>
                   <DataTableHeaderCell>Venue</DataTableHeaderCell>
                   <DataTableHeaderCell>Starts</DataTableHeaderCell>
@@ -209,14 +276,13 @@ export function SubmissionsTabs({
               <DataTableBody>
                 {events.map((e) => (
                   <DataTableRow key={e.id}>
-                    <DataTableCell>
-                      <TableCheckbox
-                        checked={selection.selected.has(e.id)}
-                        disabled={busy === e.id || bulk.busy}
-                        onChange={(ev) => selection.toggleOne(e.id, ev.target.checked)}
-                        aria-label={`Select ${e.title}`}
-                      />
-                    </DataTableCell>
+                    <SelectRowCell
+                      id={e.id}
+                      label={e.title}
+                      checked={eventSelection.selected.has(e.id)}
+                      disabled={busy === e.id || eventBulk.busy}
+                      onChange={eventSelection.toggleOne}
+                    />
                     <DataTableCell>{e.title}</DataTableCell>
                     <DataTableCell>{e.venue?.name ?? "-"}</DataTableCell>
                     <DataTableCell>{new Date(e.starts_at).toLocaleString()}</DataTableCell>
@@ -226,7 +292,7 @@ export function SubmissionsTabs({
                     <DataTableCell className="text-right">
                       <EventReviewActions
                         eventId={e.id}
-                        disabled={busy === e.id || bulk.busy}
+                        disabled={busy === e.id || eventBulk.busy}
                       />
                     </DataTableCell>
                   </DataTableRow>
@@ -239,40 +305,76 @@ export function SubmissionsTabs({
         drivers.length === 0 ? (
           <p className="text-wtva-muted">No pending driver listings.</p>
         ) : (
-          <DataTable>
-            <DataTableHead>
-              <tr>
-                <DataTableHeaderCell>Company</DataTableHeaderCell>
-                <DataTableHeaderCell>City</DataTableHeaderCell>
-                <DataTableHeaderCell>Email</DataTableHeaderCell>
-                <DataTableHeaderCell>Listing expires</DataTableHeaderCell>
-                <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
-              </tr>
-            </DataTableHead>
-            <DataTableBody>
-              {drivers.map((d) => (
-                <DataTableRow key={d.id}>
-                  <DataTableCell>{d.company_name}</DataTableCell>
-                  <DataTableCell>{d.city ?? "-"}</DataTableCell>
-                  <DataTableCell>{d.contact_email ?? "-"}</DataTableCell>
-                  <DataTableCell>
-                    {d.listing_expires_at
-                      ? new Date(d.listing_expires_at).toLocaleDateString()
-                      : "-"}
-                  </DataTableCell>
-                  <DataTableCell className="text-right">
-                    <Button
-                      disabled={busy === d.id}
-                      className="px-3 py-1 text-xs"
-                      onClick={() => publishDriver(d.id)}
-                    >
-                      Approve & publish
-                    </Button>
-                  </DataTableCell>
-                </DataTableRow>
-              ))}
-            </DataTableBody>
-          </DataTable>
+          <>
+            <BulkActionBar
+              itemLabel="drivers"
+              totalCount={drivers.length}
+              selectedCount={driverSelection.selectedCount}
+              allSelected={driverSelection.allSelected}
+              busy={driverBulk.busy}
+              onSelectAll={driverSelection.toggleAll}
+              onClear={driverSelection.clearSelection}
+            >
+              <Button
+                className="px-3 py-1 text-xs"
+                disabled={driverBulk.busy}
+                onClick={() =>
+                  driverBulk.post("/api/admin/drivers/bulk", {
+                    ids: driverSelection.selectedIds,
+                    action: "publish",
+                  })
+                }
+              >
+                Approve & publish
+              </Button>
+            </BulkActionBar>
+            <DataTable>
+              <DataTableHead>
+                <tr>
+                  <SelectAllHeaderCell
+                    checked={driverSelection.allSelected}
+                    disabled={driverBulk.busy}
+                    onChange={driverSelection.toggleAll}
+                  />
+                  <DataTableHeaderCell>Company</DataTableHeaderCell>
+                  <DataTableHeaderCell>City</DataTableHeaderCell>
+                  <DataTableHeaderCell>Email</DataTableHeaderCell>
+                  <DataTableHeaderCell>Listing expires</DataTableHeaderCell>
+                  <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
+                </tr>
+              </DataTableHead>
+              <DataTableBody>
+                {drivers.map((d) => (
+                  <DataTableRow key={d.id}>
+                    <SelectRowCell
+                      id={d.id}
+                      label={d.company_name}
+                      checked={driverSelection.selected.has(d.id)}
+                      disabled={busy === d.id || driverBulk.busy}
+                      onChange={driverSelection.toggleOne}
+                    />
+                    <DataTableCell>{d.company_name}</DataTableCell>
+                    <DataTableCell>{d.city ?? "-"}</DataTableCell>
+                    <DataTableCell>{d.contact_email ?? "-"}</DataTableCell>
+                    <DataTableCell>
+                      {d.listing_expires_at
+                        ? new Date(d.listing_expires_at).toLocaleDateString()
+                        : "-"}
+                    </DataTableCell>
+                    <DataTableCell className="text-right">
+                      <Button
+                        disabled={busy === d.id || driverBulk.busy}
+                        className="px-3 py-1 text-xs"
+                        onClick={() => publishDriver(d.id)}
+                      >
+                        Approve & publish
+                      </Button>
+                    </DataTableCell>
+                  </DataTableRow>
+                ))}
+              </DataTableBody>
+            </DataTable>
+          </>
         )
       ) : promoterLinks.length === 0 && promoterEvents.length === 0 ? (
         <p className="text-wtva-muted">No pending promoter submissions.</p>
@@ -281,9 +383,49 @@ export function SubmissionsTabs({
           {promoterLinks.length > 0 && (
             <section>
               <h2 className="mb-3 font-semibold">Venue access requests</h2>
+              <BulkActionBar
+                itemLabel="requests"
+                totalCount={promoterLinks.length}
+                selectedCount={linkSelection.selectedCount}
+                allSelected={linkSelection.allSelected}
+                busy={linkBulk.busy}
+                onSelectAll={linkSelection.toggleAll}
+                onClear={linkSelection.clearSelection}
+              >
+                <Button
+                  className="px-3 py-1 text-xs"
+                  disabled={linkBulk.busy}
+                  onClick={() =>
+                    linkBulk.post("/api/admin/promoter-links/bulk", {
+                      ids: linkSelection.selectedIds,
+                      action: "approve",
+                    })
+                  }
+                >
+                  Approve
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="px-3 py-1 text-xs"
+                  disabled={linkBulk.busy}
+                  onClick={() =>
+                    linkBulk.post("/api/admin/promoter-links/bulk", {
+                      ids: linkSelection.selectedIds,
+                      action: "reject",
+                    })
+                  }
+                >
+                  Reject
+                </Button>
+              </BulkActionBar>
               <DataTable>
                 <DataTableHead>
                   <tr>
+                    <SelectAllHeaderCell
+                      checked={linkSelection.allSelected}
+                      disabled={linkBulk.busy}
+                      onChange={linkSelection.toggleAll}
+                    />
                     <DataTableHeaderCell>Promoter</DataTableHeaderCell>
                     <DataTableHeaderCell>Venue</DataTableHeaderCell>
                     <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
@@ -292,28 +434,37 @@ export function SubmissionsTabs({
                 <DataTableBody>
                   {promoterLinks.map((l) => (
                     <DataTableRow key={l.id}>
+                      <SelectRowCell
+                        id={l.id}
+                        label={l.promoter?.name ?? l.id}
+                        checked={linkSelection.selected.has(l.id)}
+                        disabled={busy === l.id || linkBulk.busy}
+                        onChange={linkSelection.toggleOne}
+                      />
                       <DataTableCell>
                         {l.promoter?.name ?? "-"}
                         <br />
                         <span className="text-xs text-wtva-muted">{l.promoter?.email}</span>
                       </DataTableCell>
                       <DataTableCell>{l.venue?.name ?? l.venue_id}</DataTableCell>
-                      <DataTableCell className="text-right space-x-2">
-                        <Button
-                          disabled={busy === l.id}
-                          className="px-3 py-1 text-xs"
-                          onClick={() => reviewPromoterLink(l.id, "approved")}
-                        >
-                          Approve
-                        </Button>
-                        <Button
-                          disabled={busy === l.id}
-                          variant="ghost"
-                          className="px-3 py-1 text-xs"
-                          onClick={() => reviewPromoterLink(l.id, "rejected")}
-                        >
-                          Reject
-                        </Button>
+                      <DataTableCell className="text-right">
+                        <div className="flex flex-wrap justify-end gap-2">
+                          <Button
+                            disabled={busy === l.id || linkBulk.busy}
+                            className="px-3 py-1 text-xs"
+                            onClick={() => reviewPromoterLink(l.id, "approved")}
+                          >
+                            Approve
+                          </Button>
+                          <Button
+                            disabled={busy === l.id || linkBulk.busy}
+                            variant="ghost"
+                            className="px-3 py-1 text-xs"
+                            onClick={() => reviewPromoterLink(l.id, "rejected")}
+                          >
+                            Reject
+                          </Button>
+                        </div>
                       </DataTableCell>
                     </DataTableRow>
                   ))}
@@ -324,9 +475,49 @@ export function SubmissionsTabs({
           {promoterEvents.length > 0 && (
             <section>
               <h2 className="mb-3 font-semibold">Promoter-created events</h2>
+              <BulkActionBar
+                itemLabel="events"
+                totalCount={promoterEvents.length}
+                selectedCount={promoterEventSelection.selectedCount}
+                allSelected={promoterEventSelection.allSelected}
+                busy={promoterEventBulk.busy}
+                onSelectAll={promoterEventSelection.toggleAll}
+                onClear={promoterEventSelection.clearSelection}
+              >
+                <Button
+                  className="px-3 py-1 text-xs"
+                  disabled={promoterEventBulk.busy}
+                  onClick={() =>
+                    promoterEventBulk.post("/api/admin/promoter-events/bulk", {
+                      ids: promoterEventSelection.selectedIds,
+                      action: "approve",
+                    })
+                  }
+                >
+                  Approve & publish
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="px-3 py-1 text-xs"
+                  disabled={promoterEventBulk.busy}
+                  onClick={() =>
+                    promoterEventBulk.post("/api/admin/promoter-events/bulk", {
+                      ids: promoterEventSelection.selectedIds,
+                      action: "reject",
+                    })
+                  }
+                >
+                  Reject
+                </Button>
+              </BulkActionBar>
               <DataTable>
                 <DataTableHead>
                   <tr>
+                    <SelectAllHeaderCell
+                      checked={promoterEventSelection.allSelected}
+                      disabled={promoterEventBulk.busy}
+                      onChange={promoterEventSelection.toggleAll}
+                    />
                     <DataTableHeaderCell>Event</DataTableHeaderCell>
                     <DataTableHeaderCell>Venue</DataTableHeaderCell>
                     <DataTableHeaderCell>Date</DataTableHeaderCell>
@@ -346,27 +537,36 @@ export function SubmissionsTabs({
                       : ev.venue?.name;
                     return (
                       <DataTableRow key={ev.id}>
+                        <SelectRowCell
+                          id={ev.id}
+                          label={ev.title}
+                          checked={promoterEventSelection.selected.has(ev.id)}
+                          disabled={busy === ev.id || promoterEventBulk.busy}
+                          onChange={promoterEventSelection.toggleOne}
+                        />
                         <DataTableCell>{ev.title}</DataTableCell>
                         <DataTableCell>{venueName ?? "-"}</DataTableCell>
                         <DataTableCell>
                           {new Date(ev.starts_at).toLocaleString()}
                         </DataTableCell>
-                        <DataTableCell className="text-right space-x-2">
-                          <Button
-                            disabled={busy === ev.id}
-                            className="px-3 py-1 text-xs"
-                            onClick={() => reviewPromoterEvent(ev.id, "approved")}
-                          >
-                            Approve & publish
-                          </Button>
-                          <Button
-                            disabled={busy === ev.id}
-                            variant="ghost"
-                            className="px-3 py-1 text-xs"
-                            onClick={() => reviewPromoterEvent(ev.id, "rejected")}
-                          >
-                            Reject
-                          </Button>
+                        <DataTableCell className="text-right">
+                          <div className="flex flex-wrap justify-end gap-2">
+                            <Button
+                              disabled={busy === ev.id || promoterEventBulk.busy}
+                              className="px-3 py-1 text-xs"
+                              onClick={() => reviewPromoterEvent(ev.id, "approved")}
+                            >
+                              Approve & publish
+                            </Button>
+                            <Button
+                              disabled={busy === ev.id || promoterEventBulk.busy}
+                              variant="ghost"
+                              className="px-3 py-1 text-xs"
+                              onClick={() => reviewPromoterEvent(ev.id, "rejected")}
+                            >
+                              Reject
+                            </Button>
+                          </div>
                         </DataTableCell>
                       </DataTableRow>
                     );

@@ -8,7 +8,7 @@ export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireAdmin();
+  const auth = await requireAdmin("users");
   if (auth.error) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
