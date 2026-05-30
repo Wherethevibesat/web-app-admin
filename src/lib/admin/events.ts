@@ -103,8 +103,29 @@ export async function upsertEvent(form: EventFormData): Promise<string> {
       featured_ends_at: featuredEndsAt,
       updated_at: now,
     };
+    const { data: existing, error: existingErr } = await admin
+      .from("events")
+      .select("series_id")
+      .eq("id", form.id)
+      .maybeSingle();
+    if (existingErr) throw existingErr;
+
     const { error } = await admin.from("events").update(payload).eq("id", form.id);
     if (error) throw error;
+
+    if (existing?.series_id) {
+      const { error: seriesUpdateErr } = await admin
+        .from("events")
+        .update({
+          featured: form.featured,
+          homepage_featured: form.homepage_featured,
+          featured_starts_at: featuredStartsAt,
+          featured_ends_at: featuredEndsAt,
+          updated_at: now,
+        })
+        .eq("series_id", existing.series_id);
+      if (seriesUpdateErr) throw seriesUpdateErr;
+    }
     await admin.from("event_ticket_tiers").delete().eq("event_id", form.id);
     await saveTicketTiers([form.id], tiers);
     return form.id;
