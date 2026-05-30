@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input, Label, Select, Textarea } from "@/components/ui/input";
 import type { NeighborhoodRow } from "@/lib/types/neighborhood";
 import { ImpersonateButton } from "@/components/admin/impersonate-button";
+import { VenueImageUpload } from "@/components/admin/venue-image-upload";
 import {
   SUBSCRIPTION_TIERS,
   VENUE_TYPES,
@@ -131,14 +132,7 @@ export function VenueForm({
         />
       </div>
 
-      <div>
-        <Label htmlFor="image_url">Image URL</Label>
-        <Input
-          id="image_url"
-          value={form.image_url}
-          onChange={(e) => update("image_url", e.target.value)}
-        />
-      </div>
+      <VenueImageUpload value={form.image_url} onChange={(url) => update("image_url", url)} />
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
