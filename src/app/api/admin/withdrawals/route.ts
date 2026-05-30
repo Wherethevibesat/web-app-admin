@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/require-admin";
 import { logAdminAction } from "@/lib/admin/audit";
 import { createWithdrawal } from "@/lib/admin/stripe";
+import { createPlatformPayout } from "@/lib/admin/stripe-payout";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(request: Request) {
   const auth = await requireAdmin();
@@ -24,17 +26,46 @@ export async function POST(request: Request) {
       created_by: auth.user!.id,
       notes,
     });
+
+    let stripePayoutId: string | null = null;
+    let status: "pending" | "completed" | "failed" = "pending";
+    let message =
+      "Withdrawal recorded as pending. Set STRIPE_SECRET_KEY on the admin app to auto-create Stripe payouts.";
+
+    try {
+      stripePayoutId = await createPlatformPayout(amount);
+      status = "completed";
+      message = "Withdrawal submitted to Stripe.";
+    } catch (payoutErr) {
+      const payoutMessage =
+        payoutErr instanceof Error ? payoutErr.message : "Stripe payout failed";
+      if (process.env.STRIPE_SECRET_KEY) {
+        status = "failed";
+        message = payoutMessage;
+      }
+    }
+
+    const admin = createAdminClient();
+    await admin
+      .from("withdrawals")
+      .update({
+        status,
+        stripe_transfer_id: stripePayoutId,
+      })
+      .eq("id", id);
+
     await logAdminAction({
       adminId: auth.user!.id,
       action: "withdrawal.request",
       entityType: "withdrawal",
       entityId: id,
-      payload: { amount, notes },
+      payload: { amount, notes, status, stripePayoutId },
     });
     return NextResponse.json({
       id,
-      message:
-        "Withdrawal recorded as pending. Connect Stripe Edge Function stripe-create-payout to complete transfers.",
+      status,
+      stripePayoutId,
+      message,
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Request failed";

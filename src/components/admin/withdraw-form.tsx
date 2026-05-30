@@ -34,9 +34,8 @@ export function WithdrawForm() {
   return (
     <form onSubmit={handleSubmit} className="max-w-md space-y-4">
       <p className="text-sm text-wtva-muted">
-        Records a pending withdrawal. Wire up the{" "}
-        <code className="text-foreground">stripe-create-payout</code> Edge Function
-        to move money via Stripe Connect.
+        Transfers platform Stripe balance to your connected bank account. Requires{" "}
+        <code className="text-foreground">STRIPE_SECRET_KEY</code> on the admin server.
       </p>
       <div>
         <Label htmlFor="amount">Amount ($)</Label>
