@@ -138,6 +138,16 @@ export async function upsertEvent(form: EventFormData): Promise<string> {
     recurrence: form.recurrence,
   });
 
+  let submittedBy: string | null = null;
+  if (form.venue_id) {
+    const { data: venueRow } = await admin
+      .from("venues")
+      .select("owner_id")
+      .eq("id", form.venue_id)
+      .maybeSingle();
+    submittedBy = venueRow?.owner_id ?? null;
+  }
+
   const { data: series, error: seriesError } = await admin
     .from("event_series")
     .insert({
@@ -147,6 +157,7 @@ export async function upsertEvent(form: EventFormData): Promise<string> {
       event_type: form.event_type,
       neighborhood: form.neighborhood || null,
       image_url: form.image_url || null,
+      submitted_by: submittedBy,
       status: form.status,
       updated_at: now,
     })
@@ -180,6 +191,7 @@ export async function upsertEvent(form: EventFormData): Promise<string> {
     homepage_featured: form.homepage_featured,
     featured_starts_at: featuredStartsAt,
     featured_ends_at: featuredEndsAt,
+    submitted_by: submittedBy,
     updated_at: now,
   }));
 
