@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input, Select } from "@/components/ui/input";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useConfirmDelete } from "@/components/ui/confirm-dialog";
 import {
@@ -32,12 +33,80 @@ function statusBadgeVariant(status: string): "success" | "warning" | "danger" | 
   return "default";
 }
 
+type EventStatusFilter = "all" | "published" | "pending_review" | "draft" | "cancelled";
+type EventTimeFilter = "all" | "upcoming" | "past";
+type EventFeatureFilter = "all" | "featured" | "homepage_featured";
+type EventSortField = "starts_at" | "title" | "status" | "venue";
+type SortDirection = "asc" | "desc";
+
+function eventMatchesSearch(event: EventRow, term: string): boolean {
+  if (!term) return true;
+  const haystack = [
+    event.title,
+    event.event_type,
+    event.neighborhood,
+    event.venue?.name,
+    event.status,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  return haystack.includes(term);
+}
+
+function eventMatchesTime(event: EventRow, timeFilter: EventTimeFilter): boolean {
+  if (timeFilter === "all") return true;
+  const now = Date.now();
+  const end = event.ends_at ? new Date(event.ends_at).getTime() : new Date(event.starts_at).getTime();
+  const start = new Date(event.starts_at).getTime();
+  if (timeFilter === "upcoming") return end >= now;
+  return start < now;
+}
+
 export function EventsTable({ events }: { events: EventRow[] }) {
   const router = useRouter();
   const confirm = useConfirm();
   const confirmDelete = useConfirmDelete();
   const [busy, setBusy] = useState<string | null>(null);
-  const ids = events.map((e) => e.id);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<EventStatusFilter>("all");
+  const [timeFilter, setTimeFilter] = useState<EventTimeFilter>("all");
+  const [featureFilter, setFeatureFilter] = useState<EventFeatureFilter>("all");
+  const [sortField, setSortField] = useState<EventSortField>("starts_at");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+
+  const visibleEvents = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    const filtered = events.filter((e) => {
+      if (statusFilter !== "all" && e.status !== statusFilter) return false;
+      if (!eventMatchesTime(e, timeFilter)) return false;
+      if (featureFilter === "featured" && !e.featured) return false;
+      if (featureFilter === "homepage_featured" && !e.homepage_featured) return false;
+      return eventMatchesSearch(e, term);
+    });
+
+    return [...filtered].sort((a, b) => {
+      let comp = 0;
+      switch (sortField) {
+        case "title":
+          comp = a.title.localeCompare(b.title);
+          break;
+        case "status":
+          comp = a.status.localeCompare(b.status);
+          break;
+        case "venue":
+          comp = (a.venue?.name ?? "").localeCompare(b.venue?.name ?? "");
+          break;
+        case "starts_at":
+        default:
+          comp = new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime();
+          break;
+      }
+      return sortDirection === "asc" ? comp : -comp;
+    });
+  }, [events, search, statusFilter, timeFilter, featureFilter, sortField, sortDirection]);
+
+  const ids = visibleEvents.map((e) => e.id);
   const selection = useTableSelection(ids);
   const bulk = useBulkRequest(selection.clearSelection);
 
@@ -93,12 +162,94 @@ export function EventsTable({ events }: { events: EventRow[] }) {
   }
 
   const rowBusy = (id: string) => busy === id || bulk.busy;
+  const hasActiveFilters =
+    search.trim() !== "" ||
+    statusFilter !== "all" ||
+    timeFilter !== "all" ||
+    featureFilter !== "all";
 
   return (
     <>
+      <div className="mb-4 grid gap-3 rounded-lg border border-wtva-dark-300 bg-wtva-dark-400/50 p-4 md:grid-cols-6">
+        <Input
+          placeholder="Search title, venue, neighborhood, type"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="md:col-span-2"
+        />
+        <Select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value as EventStatusFilter)}
+        >
+          <option value="all">All statuses</option>
+          <option value="published">Published</option>
+          <option value="pending_review">Pending review</option>
+          <option value="draft">Draft</option>
+          <option value="cancelled">Cancelled</option>
+        </Select>
+        <Select
+          value={timeFilter}
+          onChange={(e) => setTimeFilter(e.target.value as EventTimeFilter)}
+        >
+          <option value="all">All dates</option>
+          <option value="upcoming">Upcoming</option>
+          <option value="past">Past</option>
+        </Select>
+        <Select
+          value={featureFilter}
+          onChange={(e) => setFeatureFilter(e.target.value as EventFeatureFilter)}
+        >
+          <option value="all">All events</option>
+          <option value="featured">Featured</option>
+          <option value="homepage_featured">Homepage featured</option>
+        </Select>
+        <div className="flex gap-2">
+          <Select
+            value={sortField}
+            onChange={(e) => setSortField(e.target.value as EventSortField)}
+          >
+            <option value="starts_at">Sort by date</option>
+            <option value="title">Sort by title</option>
+            <option value="venue">Sort by venue</option>
+            <option value="status">Sort by status</option>
+          </Select>
+          <Select
+            value={sortDirection}
+            onChange={(e) => setSortDirection(e.target.value as SortDirection)}
+            className="max-w-[110px]"
+          >
+            <option value="desc">Desc</option>
+            <option value="asc">Asc</option>
+          </Select>
+        </div>
+      </div>
+
+      {visibleEvents.length === 0 ? (
+        <p className="rounded-xl border border-dashed border-wtva-dark-300 p-8 text-center text-wtva-muted">
+          No events match current filters.
+          {hasActiveFilters ? (
+            <>
+              {" "}
+              <button
+                type="button"
+                className="text-foreground underline"
+                onClick={() => {
+                  setSearch("");
+                  setStatusFilter("all");
+                  setTimeFilter("all");
+                  setFeatureFilter("all");
+                }}
+              >
+                Clear filters
+              </button>
+            </>
+          ) : null}
+        </p>
+      ) : (
+        <>
       <BulkActionBar
         itemLabel="events"
-        totalCount={events.length}
+        totalCount={visibleEvents.length}
         selectedCount={selection.selectedCount}
         allSelected={selection.allSelected}
         busy={bulk.busy}
@@ -175,7 +326,7 @@ export function EventsTable({ events }: { events: EventRow[] }) {
           </tr>
         </DataTableHead>
         <DataTableBody>
-          {events.map((e) => {
+          {visibleEvents.map((e) => {
             const pending = e.status === "pending_review";
             return (
               <DataTableRow key={e.id}>
@@ -244,6 +395,8 @@ export function EventsTable({ events }: { events: EventRow[] }) {
           })}
         </DataTableBody>
       </DataTable>
+        </>
+      )}
     </>
   );
 }
