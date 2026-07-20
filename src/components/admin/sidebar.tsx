@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -24,6 +25,7 @@ import {
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { BrandLogo } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
 import type { AdminPermission } from "@/lib/admin/permissions";
 
@@ -83,19 +85,30 @@ export function AdminSidebar({ permissions }: { permissions: string[] }) {
         collapsed ? "w-[72px]" : "w-64",
       )}
     >
-      <div className="flex items-center justify-between border-b border-wtva-dark-300 px-4 py-5">
-        {!collapsed && (
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-accent">
-              WTVA
-            </p>
-            <p className="text-sm font-bold text-foreground">Admin Portal</p>
-          </div>
+      <div
+        className={cn(
+          "border-b border-wtva-dark-300 px-3 py-4",
+          collapsed ? "flex flex-col items-center gap-1" : "flex items-center justify-between gap-2",
+        )}
+      >
+        {collapsed ? (
+          <Link href="/" className="block overflow-hidden" aria-label="Where The Vibes At">
+            <Image
+              src="/brand/wtva-logo.jpg"
+              alt="Where The Vibes At"
+              width={1024}
+              height={493}
+              priority
+              className="h-10 w-10 object-cover object-left mix-blend-multiply"
+            />
+          </Link>
+        ) : (
+          <BrandLogo href="/" label="Admin" heightClass="h-10" className="min-w-0" />
         )}
         <button
           type="button"
           onClick={() => setCollapsed((c) => !c)}
-          className="rounded-lg p-2 text-wtva-muted hover:bg-wtva-dark-300 hover:text-foreground"
+          className="shrink-0 rounded-lg p-2 text-wtva-muted hover:bg-wtva-dark-300 hover:text-foreground"
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? (

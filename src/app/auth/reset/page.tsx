@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { BrandLogo } from "@/components/brand-logo";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ResetPasswordPage() {
@@ -32,7 +33,10 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-6">
-      <div className="w-full max-w-md rounded-xl border border-wtva-dark-300 bg-wtva-card p-8">
+      <div className="w-full max-w-md rounded-2xl border border-wtva-dark-300 bg-wtva-card p-8 shadow-card">
+        <div className="mb-6 flex justify-center">
+          <BrandLogo href="/auth/login" heightClass="h-12" />
+        </div>
         <h1 className="text-2xl font-bold">Reset password</h1>
         <p className="mt-2 text-sm text-wtva-muted">
           We will email you a link to set a new password.

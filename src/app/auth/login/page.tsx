@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { BrandLogo } from "@/components/brand-logo";
 import { createClient } from "@/lib/supabase/client";
-import { Shield } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -42,10 +42,8 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-background p-6">
       <div className="w-full max-w-md rounded-2xl border border-wtva-dark-300 bg-wtva-card p-8 shadow-card">
         <div className="mb-8 flex flex-col items-center text-center">
-          <div className="mb-4 rounded-xl bg-accent/10 p-3 text-accent">
-            <Shield className="h-8 w-8" />
-          </div>
-          <h1 className="text-2xl font-bold">WTVA Admin</h1>
+          <BrandLogo href="/auth/login" showLink={false} heightClass="h-14" />
+          <h1 className="mt-4 text-xl font-bold">Admin portal</h1>
           <p className="mt-2 text-sm text-wtva-muted">
             Sign in with an admin account
           </p>
