@@ -79,14 +79,14 @@ export function AdminSidebar({ permissions }: { permissions: string[] }) {
   return (
     <aside
       className={cn(
-        "flex h-screen flex-col border-r border-wtva-dark-300 bg-wtva-dark-400 transition-all",
+        "flex h-screen flex-col border-r border-wtva-dark-300 bg-white shadow-sm transition-all",
         collapsed ? "w-[72px]" : "w-64",
       )}
     >
       <div className="flex items-center justify-between border-b border-wtva-dark-300 px-4 py-5">
         {!collapsed && (
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-wtva-subtle">
+            <p className="text-xs font-semibold uppercase tracking-wider text-accent">
               WTVA
             </p>
             <p className="text-sm font-bold text-foreground">Admin Portal</p>
@@ -95,7 +95,7 @@ export function AdminSidebar({ permissions }: { permissions: string[] }) {
         <button
           type="button"
           onClick={() => setCollapsed((c) => !c)}
-          className="rounded-lg p-2 text-wtva-muted hover:bg-wtva-dark-300"
+          className="rounded-lg p-2 text-wtva-muted hover:bg-wtva-dark-300 hover:text-foreground"
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? (
@@ -117,7 +117,7 @@ export function AdminSidebar({ permissions }: { permissions: string[] }) {
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 active
-                  ? "bg-foreground text-background"
+                  ? "bg-accent-gradient text-white shadow-accent"
                   : "text-wtva-muted hover:bg-wtva-dark-300 hover:text-foreground",
               )}
             >

@@ -1,18 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  --wtva-black: #000000;
-  --wtva-dark-400: #121212;
-  --wtva-dark-300: #1c1c1c;
-  --wtva-card: #141414;
+  color-scheme: light;
+
+  /* Neutrals — light theme */
   --wtva-neutral-50: #ffffff;
   --wtva-neutral-100: #f4f4f5;
-  --wtva-neutral-200: #a1a1aa;
-  --wtva-neutral-300: #71717a;
-  --wtva-on-primary: #000000;
+  --wtva-neutral-200: #52525b; /* muted text (readable on white) */
+  --wtva-neutral-300: #71717a; /* subtle text */
+  --wtva-on-primary: #ffffff;
 
-  --background: var(--wtva-black);
-  --foreground: var(--wtva-neutral-50);
+  /* Surfaces */
+  --wtva-page: #f6f6f9; /* app page background */
+  --wtva-card: #ffffff; /* cards / panels */
+  --wtva-dark-400: #f2f2f6; /* elevated / footer / nav / sidebar surface */
+  --wtva-dark-300: #e6e6ee; /* borders + hairlines */
+  --wtva-ink: #0f1115; /* primary ink */
+
+  /* Brand accent — purple → magenta gradient */
+  --accent: #8b2fe0;
+  --accent-from: #7c3aed;
+  --accent-via: #a21caf;
+  --accent-to: #db2777;
+
+  --background: var(--wtva-page);
+  --foreground: var(--wtva-ink);
 }
 
 @theme inline {
@@ -23,6 +35,7 @@
   --color-wtva-dark-300: var(--wtva-dark-300);
   --color-wtva-muted: var(--wtva-neutral-200);
   --color-wtva-subtle: var(--wtva-neutral-300);
+  --color-accent: var(--accent);
   --font-sans: var(--font-urbanist), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -30,4 +43,38 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+}
+
+/* Brand gradient helpers */
+.bg-accent-gradient {
+  background-image: linear-gradient(135deg, var(--accent-from), var(--accent-via), var(--accent-to));
+}
+
+.text-accent-gradient {
+  background-image: linear-gradient(135deg, var(--accent-from), var(--accent-via), var(--accent-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.border-accent-gradient {
+  border-color: var(--accent);
+}
+
+/* Soft elevation for light-theme cards */
+.shadow-card {
+  box-shadow:
+    0 1px 2px rgba(16, 17, 21, 0.04),
+    0 10px 30px rgba(16, 17, 21, 0.06);
+}
+
+.shadow-card-hover {
+  box-shadow:
+    0 2px 6px rgba(16, 17, 21, 0.06),
+    0 18px 44px rgba(16, 17, 21, 0.1);
+}
+
+/* Accent glow for primary CTAs */
+.shadow-accent {
+  box-shadow: 0 10px 30px -8px rgba(124, 58, 237, 0.55);
 }

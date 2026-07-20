@@ -21,10 +21,10 @@ export function ManagementCard({
   return (
     <Link
       href={href}
-      className="flex items-center gap-4 rounded-xl border border-wtva-dark-300 bg-wtva-card p-5 transition-colors hover:border-wtva-muted"
+      className="flex items-center gap-4 rounded-xl border border-wtva-dark-300 bg-wtva-card p-5 shadow-card transition-colors hover:border-accent"
     >
-      <div className="rounded-xl bg-wtva-dark-300 p-3">
-        <Icon className="h-7 w-7 text-foreground" />
+      <div className="rounded-xl bg-accent/10 p-3">
+        <Icon className="h-7 w-7 text-accent" />
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">

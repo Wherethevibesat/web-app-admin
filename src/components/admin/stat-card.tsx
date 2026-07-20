@@ -20,14 +20,14 @@ export function StatCard({
   const content = (
     <div
       className={cn(
-        "rounded-xl border border-wtva-dark-300 bg-wtva-card p-5 transition-colors",
-        href && "hover:border-wtva-muted",
+        "rounded-xl border border-wtva-dark-300 bg-wtva-card p-5 shadow-card transition-colors",
+        href && "hover:border-accent",
         className,
       )}
     >
       <div className="mb-4 flex items-center justify-between">
-        <div className="rounded-lg bg-wtva-dark-300 p-2">
-          <Icon className="h-5 w-5 text-foreground" />
+        <div className="rounded-lg bg-accent/10 p-2">
+          <Icon className="h-5 w-5 text-accent" />
         </div>
       </div>
       <p className="text-2xl font-bold">{value}</p>

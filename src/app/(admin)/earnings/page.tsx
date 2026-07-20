@@ -40,7 +40,7 @@ export default async function EarningsPage() {
         description="Platform revenue and transaction history."
       >
         <Link href="/earnings/withdraw">
-          <span className="rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background">
+          <span className="rounded-full bg-accent-gradient shadow-accent px-4 py-2 text-sm font-semibold text-white">
             Withdraw
           </span>
         </Link>

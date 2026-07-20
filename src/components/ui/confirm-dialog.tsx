@@ -8,7 +8,6 @@ import {
   useState,
 } from "react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 export type ConfirmOptions = {
   title: string;
@@ -100,7 +99,6 @@ export function ConfirmDialogProvider({ children }: { children: React.ReactNode 
               <Button
                 type="button"
                 variant={isDanger ? "danger" : "primary"}
-                className={cn(!isDanger && "bg-foreground text-background")}
                 onClick={() => close(true)}
                 autoFocus
               >

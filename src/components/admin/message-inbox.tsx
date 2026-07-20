@@ -116,7 +116,7 @@ export function MessageInbox({ initialThreads }: { initialThreads: SupportThread
                 type="button"
                 onClick={() => setActiveThreadId(t.id)}
                 className={`w-full rounded-lg px-3 py-2 text-left text-sm ${
-                  activeThreadId === t.id ? "bg-foreground text-background" : "hover:bg-wtva-dark-300"
+                  activeThreadId === t.id ? "bg-accent-gradient text-white shadow-accent" : "hover:bg-wtva-dark-300"
                 }`}
               >
                 <p className="font-medium">{t.user.name}</p>
@@ -184,7 +184,7 @@ export function MessageInbox({ initialThreads }: { initialThreads: SupportThread
                   <div
                     key={m.id}
                     className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
-                      isAdmin ? "ml-auto bg-foreground text-background" : "bg-wtva-dark-400"
+                      isAdmin ? "ml-auto bg-accent-gradient text-white shadow-accent" : "bg-wtva-dark-400"
                     }`}
                   >
                     <p className="text-xs opacity-70">{sender?.name ?? "User"}</p>

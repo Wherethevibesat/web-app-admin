@@ -7,7 +7,7 @@ export function Input({
   return (
     <input
       className={cn(
-        "w-full rounded-lg border border-wtva-dark-300 bg-wtva-dark-400 px-3 py-2 text-sm outline-none focus:border-foreground",
+        "w-full rounded-lg border border-wtva-dark-300 bg-wtva-card px-3 py-2 text-sm outline-none focus:border-accent",
         className,
       )}
       {...props}
@@ -34,7 +34,7 @@ export function Textarea({
   return (
     <textarea
       className={cn(
-        "w-full rounded-lg border border-wtva-dark-300 bg-wtva-dark-400 px-3 py-2 text-sm outline-none focus:border-foreground",
+        "w-full rounded-lg border border-wtva-dark-300 bg-wtva-card px-3 py-2 text-sm outline-none focus:border-accent",
         className,
       )}
       {...props}
@@ -49,7 +49,7 @@ export function Select({
   return (
     <select
       className={cn(
-        "w-full rounded-lg border border-wtva-dark-300 bg-wtva-dark-400 px-3 py-2 text-sm outline-none focus:border-foreground",
+        "w-full rounded-lg border border-wtva-dark-300 bg-wtva-card px-3 py-2 text-sm outline-none focus:border-accent",
         className,
       )}
       {...props}

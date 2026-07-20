@@ -40,9 +40,9 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-6">
-      <div className="w-full max-w-md rounded-xl border border-wtva-dark-300 bg-wtva-card p-8">
+      <div className="w-full max-w-md rounded-2xl border border-wtva-dark-300 bg-wtva-card p-8 shadow-card">
         <div className="mb-8 flex flex-col items-center text-center">
-          <div className="mb-4 rounded-xl bg-wtva-dark-300 p-3">
+          <div className="mb-4 rounded-xl bg-accent/10 p-3 text-accent">
             <Shield className="h-8 w-8" />
           </div>
           <h1 className="text-2xl font-bold">WTVA Admin</h1>
@@ -63,7 +63,7 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-wtva-dark-300 bg-wtva-dark-400 px-4 py-2.5 text-sm outline-none focus:border-foreground"
+              className="w-full rounded-lg border border-wtva-dark-300 bg-wtva-card px-4 py-2.5 text-sm outline-none focus:border-accent"
               placeholder="admin@demo.com"
             />
           </div>
@@ -81,12 +81,12 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-wtva-dark-300 bg-wtva-dark-400 px-4 py-2.5 text-sm outline-none focus:border-foreground"
+              className="w-full rounded-lg border border-wtva-dark-300 bg-wtva-card px-4 py-2.5 text-sm outline-none focus:border-accent"
             />
           </div>
 
           {error && (
-            <p className="rounded-lg bg-red-950/50 px-3 py-2 text-sm text-red-400">
+            <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
               {error}
             </p>
           )}
@@ -94,7 +94,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-foreground py-2.5 text-sm font-semibold text-background transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="w-full rounded-full bg-accent-gradient shadow-accent py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>

@@ -58,7 +58,7 @@ export default async function UnauthorizedPage() {
       <div className="flex flex-wrap justify-center gap-4">
         <Link
           href="/"
-          className="rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background"
+          className="rounded-full bg-accent-gradient shadow-accent px-4 py-2 text-sm font-semibold text-white"
         >
           Try again
         </Link>

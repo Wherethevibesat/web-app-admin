@@ -8,8 +8,8 @@ export function TableCheckbox({
     <input
       type="checkbox"
       className={cn(
-        "size-4 shrink-0 cursor-pointer rounded border-2 border-zinc-400 bg-zinc-900 accent-white",
-        "checked:border-white checked:bg-white",
+        "size-4 shrink-0 cursor-pointer rounded border-2 border-wtva-dark-300 bg-white accent-accent",
+        "checked:border-accent checked:bg-accent",
         "disabled:cursor-not-allowed disabled:opacity-35",
         className,
       )}

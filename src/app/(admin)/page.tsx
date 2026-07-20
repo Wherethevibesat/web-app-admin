@@ -99,7 +99,7 @@ export default async function DashboardPage() {
       {stats.totalEarnings != null && (
         <Link
           href="/earnings"
-          className="block rounded-xl border border-wtva-dark-300 bg-foreground p-6 text-background transition-opacity hover:opacity-95"
+          className="block rounded-xl border border-transparent bg-accent-gradient p-6 text-white shadow-accent transition-opacity hover:opacity-95"
         >
           <div className="flex items-center gap-5">
             <div className="rounded-xl bg-background/20 p-4">

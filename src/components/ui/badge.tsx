@@ -14,9 +14,9 @@ export function Badge({
       className={cn(
         "inline-flex rounded-full px-2 py-0.5 text-xs font-semibold",
         variant === "default" && "bg-wtva-dark-300 text-foreground",
-        variant === "success" && "bg-green-900/50 text-green-300",
-        variant === "warning" && "bg-amber-900/50 text-amber-300",
-        variant === "danger" && "bg-red-900/50 text-red-300",
+        variant === "success" && "bg-emerald-50 text-emerald-700 border border-emerald-200",
+        variant === "warning" && "bg-amber-50 text-amber-700 border border-amber-200",
+        variant === "danger" && "bg-red-50 text-red-700 border border-red-200",
         className,
       )}
     >

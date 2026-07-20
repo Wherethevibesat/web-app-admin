@@ -75,14 +75,14 @@ export function AddPromoterForm({
         <button
           type="button"
           onClick={() => setMode("email")}
-          className={`rounded-lg px-3 py-1.5 ${mode === "email" ? "bg-foreground text-background" : "border border-wtva-dark-300"}`}
+          className={`rounded-lg px-3 py-1.5 ${mode === "email" ? "bg-accent-gradient text-white shadow-accent" : "border border-wtva-dark-300"}`}
         >
           By email
         </button>
         <button
           type="button"
           onClick={() => setMode("existing")}
-          className={`rounded-lg px-3 py-1.5 ${mode === "existing" ? "bg-foreground text-background" : "border border-wtva-dark-300"}`}
+          className={`rounded-lg px-3 py-1.5 ${mode === "existing" ? "bg-accent-gradient text-white shadow-accent" : "border border-wtva-dark-300"}`}
         >
           Existing promoter
         </button>

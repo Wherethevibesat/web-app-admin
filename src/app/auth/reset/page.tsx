@@ -39,7 +39,7 @@ export default function ResetPasswordPage() {
         </p>
 
         {sent ? (
-          <p className="mt-6 text-sm text-green-400">
+          <p className="mt-6 text-sm text-emerald-700">
             Check your inbox for the reset link.
           </p>
         ) : (
@@ -50,15 +50,15 @@ export default function ResetPasswordPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@demo.com"
-              className="w-full rounded-lg border border-wtva-dark-300 bg-wtva-dark-400 px-4 py-2.5 text-sm outline-none focus:border-foreground"
+              className="w-full rounded-lg border border-wtva-dark-300 bg-wtva-card px-4 py-2.5 text-sm outline-none focus:border-accent"
             />
             {error && (
-              <p className="text-sm text-red-400">{error}</p>
+              <p className="text-sm text-red-600">{error}</p>
             )}
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-foreground py-2.5 text-sm font-semibold text-background disabled:opacity-50"
+              className="w-full rounded-full bg-accent-gradient shadow-accent py-2.5 text-sm font-semibold text-white disabled:opacity-50"
             >
               {loading ? "Sending…" : "Send reset link"}
             </button>

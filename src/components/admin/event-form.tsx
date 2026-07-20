@@ -221,7 +221,7 @@ export function EventForm({
                         key={label}
                         type="button"
                         onClick={() => toggleRecurrenceWeekday(day)}
-                        className={`rounded-full px-3 py-1 text-xs font-semibold border ${active ? "bg-foreground text-background" : ""}`}
+                        className={`rounded-full px-3 py-1 text-xs font-semibold border ${active ? "bg-accent-gradient text-white shadow-accent" : ""}`}
                       >
                         {label}
                       </button>
