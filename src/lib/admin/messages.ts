@@ -1,9 +1,10 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendBroadcastEmail } from "@/lib/email/admin-broadcast";
+import { isFcmConfigured, sendFcmPush } from "@/lib/push/fcm";
 import type { UserRole } from "@/lib/types/database";
 
 export type MessageAudience = "customer" | "driver" | "venueOwner" | "promoter";
-export type MessageChannel = "email" | "in_app";
+export type MessageChannel = "email" | "in_app" | "push";
 
 export type AdminMessageCampaign = {
   id: string;
@@ -147,6 +148,65 @@ export async function sendCampaign(campaignId: string): Promise<{
             campaign_id: campaignId,
           });
           if (notifErr) throw notifErr;
+        } else if (channel === "push") {
+          if (!isFcmConfigured()) {
+            throw new Error("Push is not configured (set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY)");
+          }
+
+          const { data: tokens, error: tokenErr } = await admin
+            .from("device_push_tokens")
+            .select("id, token")
+            .eq("user_id", recipient.id)
+            .eq("enabled", true);
+          if (tokenErr) throw tokenErr;
+          if (!tokens?.length) {
+            throw new Error("No push token registered for this user");
+          }
+
+          let anyOk = false;
+          const errors: string[] = [];
+          for (const row of tokens) {
+            const result = await sendFcmPush({
+              token: row.token,
+              title: campaign.subject,
+              body: campaign.body,
+              imageUrl: campaign.image_url,
+              data: {
+                campaign_id: campaignId,
+                type: "broadcast",
+              },
+            });
+            if (result.ok) {
+              anyOk = true;
+              await admin
+                .from("device_push_tokens")
+                .update({ last_seen_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+                .eq("id", row.id);
+            } else {
+              errors.push(result.error ?? "Push failed");
+              if (result.invalidToken) {
+                await admin
+                  .from("device_push_tokens")
+                  .update({ enabled: false, updated_at: new Date().toISOString() })
+                  .eq("id", row.id);
+              }
+            }
+          }
+          if (!anyOk) {
+            throw new Error(errors[0] ?? "Push send failed");
+          }
+
+          // Keep inbox in sync when push is used without a separate in_app channel
+          if (!channels.includes("in_app")) {
+            await admin.from("user_notifications").insert({
+              user_id: recipient.id,
+              title: campaign.subject,
+              body: campaign.body,
+              image_url: campaign.image_url,
+              link: "/",
+              campaign_id: campaignId,
+            });
+          }
         }
 
         await admin.from("admin_message_deliveries").insert({

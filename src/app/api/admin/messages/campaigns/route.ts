@@ -5,7 +5,7 @@ import type { MessageAudience, MessageChannel } from "@/lib/admin/messages";
 import { requireAdmin } from "@/lib/admin/require-admin";
 
 const AUDIENCES: MessageAudience[] = ["customer", "driver", "venueOwner", "promoter"];
-const CHANNELS: MessageChannel[] = ["email", "in_app"];
+const CHANNELS: MessageChannel[] = ["email", "in_app", "push"];
 
 export async function GET() {
   const auth = await requireAdmin("messages");

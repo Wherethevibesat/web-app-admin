@@ -79,7 +79,7 @@ export function MessageComposeForm() {
     <div className="rounded-xl border border-wtva-dark-300 bg-wtva-card p-5">
       <h2 className="text-lg font-semibold">Broadcast message</h2>
       <p className="mt-1 text-sm text-wtva-muted">
-        Send announcements to a role segment via email and/or in-app notification.
+        Send announcements to a role segment via email, push to phone, and/or in-app notification.
       </p>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -111,7 +111,7 @@ export function MessageComposeForm() {
         </div>
         <div className="sm:col-span-2">
           <span className="text-sm text-wtva-muted">Channels</span>
-          <div className="mt-2 flex gap-4 text-sm">
+          <div className="mt-2 flex flex-wrap gap-4 text-sm">
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -123,12 +123,23 @@ export function MessageComposeForm() {
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
+                checked={channels.includes("push")}
+                onChange={() => toggleChannel("push")}
+              />
+              Push to phone
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
                 checked={channels.includes("in_app")}
                 onChange={() => toggleChannel("in_app")}
               />
               In-app notification
             </label>
           </div>
+          <p className="mt-2 text-xs text-wtva-subtle">
+            Push requires Firebase (FCM) env vars and users who have opened the app while signed in.
+          </p>
         </div>
         <label className="block text-sm sm:col-span-2">
           <span className="text-wtva-muted">Message</span>

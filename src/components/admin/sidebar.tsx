@@ -21,6 +21,7 @@ import {
   Users,
   UserRound,
   MessageSquare,
+  Inbox,
 } from "lucide-react";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -37,6 +38,7 @@ const navItems = [
   { href: "/drivers", label: "Drivers", icon: Car, permission: "drivers" as AdminPermission },
   { href: "/promoters", label: "Promoters", icon: Megaphone, permission: "promoters" as AdminPermission },
   { href: "/customers", label: "Customers", icon: UserRound, permission: "customers" as AdminPermission },
+  { href: "/event-interest", label: "Event interest", icon: Inbox, permission: "customers" as AdminPermission },
   { href: "/messages", label: "Messages", icon: MessageSquare, permission: "messages" as AdminPermission },
   { href: "/users", label: "Users", icon: Users, permission: "users" as AdminPermission },
   { href: "/submissions", label: "Submissions", icon: FileCheck, permission: "submissions" as AdminPermission },
