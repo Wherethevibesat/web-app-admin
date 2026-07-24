@@ -23,6 +23,7 @@ export function SettingsForm({ initial }: { initial: PlatformSettings }) {
         event_submission_fee: form.event_submission_fee,
         event_ticket_commission_pct: form.event_ticket_commission_pct,
         vip_commission_pct: form.vip_commission_pct,
+        night_package_commission_pct: form.night_package_commission_pct,
         driver_listing_fee: form.driver_listing_fee,
         driver_listing_months: form.driver_listing_months,
         driver_booking_commission_pct: form.driver_booking_commission_pct,
@@ -147,6 +148,26 @@ export function SettingsForm({ initial }: { initial: PlatformSettings }) {
               }))
             }
           />
+        </div>
+        <div>
+          <Label htmlFor="night_package_commission">Build Your Night service fee (%)</Label>
+          <Input
+            id="night_package_commission"
+            type="number"
+            min={0}
+            max={100}
+            step={0.5}
+            value={form.night_package_commission_pct}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                night_package_commission_pct: Number(e.target.value),
+              }))
+            }
+          />
+          <p className="mt-1 text-xs text-wtva-muted">
+            Added on top of stop prices at guest checkout.
+          </p>
         </div>
       </div>
 

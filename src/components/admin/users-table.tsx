@@ -25,7 +25,7 @@ import { permissionLabel, type AdminPermission } from "@/lib/admin/permissions";
 import type { UserProfile, UserRole } from "@/lib/types/database";
 
 const BUSINESS_ROLES: UserRole[] = ["venueOwner", "driver", "promoter"];
-type UserSortField = "created_at" | "name" | "email" | "role" | "total_points";
+type UserSortField = "created_at" | "name" | "email" | "role";
 type SortDirection = "asc" | "desc";
 
 function adminAccessLabel(user: UserProfile): string {
@@ -69,9 +69,6 @@ export function UsersTable({ users }: { users: UserProfile[] }) {
           break;
         case "role":
           comp = a.role.localeCompare(b.role);
-          break;
-        case "total_points":
-          comp = (a.total_points ?? 0) - (b.total_points ?? 0);
           break;
         case "created_at":
         default:
@@ -139,7 +136,6 @@ export function UsersTable({ users }: { users: UserProfile[] }) {
             <option value="name">Sort by name</option>
             <option value="email">Sort by email</option>
             <option value="role">Sort by role</option>
-            <option value="total_points">Sort by points</option>
           </Select>
           <Select
             value={sortDirection}
@@ -221,7 +217,6 @@ export function UsersTable({ users }: { users: UserProfile[] }) {
             <DataTableHeaderCell>Email</DataTableHeaderCell>
             <DataTableHeaderCell>Role</DataTableHeaderCell>
             <DataTableHeaderCell>Access</DataTableHeaderCell>
-            <DataTableHeaderCell>Points</DataTableHeaderCell>
             <DataTableHeaderCell>Created</DataTableHeaderCell>
             <DataTableHeaderCell className="text-right">Actions</DataTableHeaderCell>
           </tr>
@@ -257,7 +252,6 @@ export function UsersTable({ users }: { users: UserProfile[] }) {
                 </Select>
               </DataTableCell>
               <DataTableCell className="text-wtva-muted">{adminAccessLabel(u)}</DataTableCell>
-              <DataTableCell>{u.total_points ?? 0}</DataTableCell>
               <DataTableCell className="text-wtva-muted">
                 {new Date(u.created_at).toLocaleDateString()}
               </DataTableCell>

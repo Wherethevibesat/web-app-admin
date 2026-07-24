@@ -17,6 +17,7 @@ import {
   MapPin,
   Megaphone,
   Settings,
+  Sparkles,
   Star,
   Users,
   UserRound,
@@ -44,6 +45,7 @@ const navItems = [
   { href: "/submissions", label: "Submissions", icon: FileCheck, permission: "submissions" as AdminPermission },
   { href: "/submissions/verification", label: "Verification", icon: BadgeCheck, permission: "verification" as AdminPermission },
   { href: "/vip-packages", label: "VIP Packages", icon: Star, permission: "vip_packages" as AdminPermission },
+  { href: "/night-packages", label: "Build Your Night", icon: Sparkles, permission: "vip_packages" as AdminPermission },
   { href: "/earnings", label: "Earnings", icon: DollarSign, permission: "earnings" as AdminPermission },
   { href: "/settings", label: "Settings", icon: Settings, permission: "settings" as AdminPermission },
 ] as const;

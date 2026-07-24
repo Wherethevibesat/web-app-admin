@@ -10,15 +10,9 @@ export async function listUsers(search?: string): Promise<UserProfile[]> {
     .order("created_at", { ascending: false });
   if (error) throw error;
 
-  const { data: rankings } = await admin.from("user_rankings").select("user_id, total_points");
-
-  const pointsMap = new Map(
-    (rankings ?? []).map((r) => [r.user_id, r.total_points as number]),
-  );
-
   let rows = (users ?? []).map((u) => ({
     ...u,
-    total_points: pointsMap.get(u.id) ?? 0,
+    total_points: 0,
   })) as UserProfile[];
 
   if (search?.trim()) {
@@ -43,15 +37,9 @@ export async function getUser(userId: string): Promise<UserProfile | null> {
   if (error) throw error;
   if (!data) return null;
 
-  const { data: rank } = await admin
-    .from("user_rankings")
-    .select("total_points")
-    .eq("user_id", userId)
-    .maybeSingle();
-
   return {
     ...data,
-    total_points: rank?.total_points ?? 0,
+    total_points: 0,
   } as UserProfile;
 }
 

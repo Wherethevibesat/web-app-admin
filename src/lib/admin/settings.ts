@@ -8,6 +8,7 @@ const DEFAULTS: PlatformSettings = {
   event_submission_fee: 25,
   event_ticket_commission_pct: 10,
   vip_commission_pct: 10,
+  night_package_commission_pct: 15,
   driver_listing_fee: 50,
   driver_listing_months: 3,
   driver_booking_commission_pct: 10,
@@ -38,6 +39,9 @@ export async function getPlatformSettings(): Promise<PlatformSettings> {
       data.event_ticket_commission_pct ?? DEFAULTS.event_ticket_commission_pct,
     ),
     vip_commission_pct: Number(data.vip_commission_pct ?? DEFAULTS.vip_commission_pct),
+    night_package_commission_pct: Number(
+      data.night_package_commission_pct ?? DEFAULTS.night_package_commission_pct,
+    ),
     driver_listing_fee: Number(data.driver_listing_fee ?? DEFAULTS.driver_listing_fee),
     driver_listing_months: Number(data.driver_listing_months ?? DEFAULTS.driver_listing_months),
     driver_booking_commission_pct: Number(

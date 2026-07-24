@@ -13,6 +13,7 @@ export default async function SettingsPage() {
     event_submission_fee: 25,
     event_ticket_commission_pct: 10,
     vip_commission_pct: 10,
+    night_package_commission_pct: 15,
     driver_listing_fee: 50,
     driver_listing_months: 3,
     driver_booking_commission_pct: 10,

@@ -118,7 +118,7 @@ export function UserForm({ user }: { user: UserProfile }) {
         </Select>
       </div>
       <p className="text-sm text-wtva-muted">
-        Points: {user.total_points ?? 0} · User ID: {user.id}
+        User ID: {user.id}
       </p>
       {role === "admin" && (
         <div>

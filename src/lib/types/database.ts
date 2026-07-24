@@ -19,6 +19,7 @@ export interface PlatformSettings {
   event_submission_fee: number;
   event_ticket_commission_pct: number;
   vip_commission_pct: number;
+  night_package_commission_pct: number;
   driver_listing_fee: number;
   driver_listing_months: number;
   driver_booking_commission_pct: number;
