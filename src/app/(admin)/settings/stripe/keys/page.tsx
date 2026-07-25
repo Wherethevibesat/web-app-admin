@@ -15,8 +15,11 @@ export default async function StripeKeysPage() {
   return (
     <div>
       <PageHeader title="Stripe API keys" description="Publishable key for checkout UI.">
-        <Link href="/settings" className="text-sm text-wtva-muted underline">
-          Settings
+        <Link
+          href="/settings?tab=payments"
+          className="text-sm text-wtva-muted underline"
+        >
+          ← Payments settings
         </Link>
       </PageHeader>
       <StripeKeysForm initialPublishable={settings.publishable_key ?? ""} />

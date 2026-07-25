@@ -32,9 +32,17 @@ export default async function StripeAccountsPage() {
         title="Stripe connected accounts"
         description="Connect accounts from the mobile app or Stripe Dashboard."
       >
-        <Link href="/settings/stripe/keys" className="text-sm text-wtva-muted underline">
-          API keys
-        </Link>
+        <div className="flex gap-4 text-sm">
+          <Link
+            href="/settings?tab=payments"
+            className="text-wtva-muted underline"
+          >
+            ← Payments settings
+          </Link>
+          <Link href="/settings/stripe/keys" className="text-wtva-muted underline">
+            API keys
+          </Link>
+        </div>
       </PageHeader>
 
       {error && <p className="mb-4 text-amber-400">{error}</p>}
