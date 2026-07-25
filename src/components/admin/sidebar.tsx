@@ -13,7 +13,6 @@ import {
   BadgeCheck,
   FileCheck,
   LayoutDashboard,
-  LogOut,
   MapPin,
   Megaphone,
   Settings,
@@ -25,8 +24,6 @@ import {
   Inbox,
 } from "lucide-react";
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
 import type { AdminPermission } from "@/lib/admin/permissions";
@@ -68,7 +65,6 @@ function isNavItemActive(pathname: string, href: string): boolean {
 
 export function AdminSidebar({ permissions }: { permissions: string[] }) {
   const pathname = usePathname();
-  const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const allowed = new Set(permissions);
   // Settings always shows — Account (password/profile) is for every admin.
@@ -79,13 +75,6 @@ export function AdminSidebar({ permissions }: { permissions: string[] }) {
       allowed.has("all") ||
       allowed.has(item.permission),
   );
-
-  async function handleSignOut() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push("/auth/login");
-    router.refresh();
-  }
 
   return (
     <aside
@@ -149,17 +138,6 @@ export function AdminSidebar({ permissions }: { permissions: string[] }) {
           );
         })}
       </nav>
-
-      <div className="mt-auto border-t border-wtva-dark-300 p-2">
-        <button
-          type="button"
-          onClick={handleSignOut}
-          className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-wtva-muted hover:bg-wtva-dark-300 hover:text-foreground"
-        >
-          <LogOut className="h-4 w-4 shrink-0" />
-          {!collapsed && <span>Sign out</span>}
-        </button>
-      </div>
     </aside>
   );
 }
