@@ -33,6 +33,24 @@ export function NightPackageForm({
     title: initial?.title ?? "",
     subtitle: initial?.subtitle ?? "",
     description: initial?.description ?? "",
+    tagline: initial?.tagline ?? "",
+    why_this_works: initial?.why_this_works ?? "",
+    perfect_for: (initial?.perfect_for ?? []).join("\n"),
+    not_ideal_for: (initial?.not_ideal_for ?? []).join("\n"),
+    diy_compare_dollars:
+      initial?.diy_compare_cents != null
+        ? String(initial.diy_compare_cents / 100)
+        : "",
+    rating: initial?.rating != null ? String(initial.rating) : "",
+    groups_booked:
+      initial?.groups_booked != null ? String(initial.groups_booked) : "",
+    vibe_tags: (initial?.vibe_tags ?? []).join(", "),
+    energy_score:
+      initial?.energy_score != null ? String(initial.energy_score) : "",
+    travel_minutes:
+      initial?.travel_minutes != null ? String(initial.travel_minutes) : "",
+    crowd_label: initial?.crowd_label ?? "",
+    music_tags: (initial?.music_tags ?? []).join(", "),
     template_key: initial?.template_key ?? "out_of_town",
     city: initial?.city ?? "houston",
     image_url: initial?.image_url ?? "",
@@ -145,6 +163,132 @@ export function NightPackageForm({
             onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
           />
         </div>
+        <div className="sm:col-span-2">
+          <Label htmlFor="tagline">Tagline (Preview hero)</Label>
+          <Input
+            id="tagline"
+            value={form.tagline}
+            onChange={(e) => setForm((f) => ({ ...f, tagline: e.target.value }))}
+            placeholder="The perfect Saturday if you want to experience Houston like a local."
+          />
+        </div>
+        <div className="sm:col-span-2">
+          <Label htmlFor="why_this_works">Why this works</Label>
+          <textarea
+            id="why_this_works"
+            className="min-h-20 w-full rounded-lg border border-wtva-dark-300 bg-wtva-card px-3 py-2 text-sm"
+            value={form.why_this_works}
+            onChange={(e) => setForm((f) => ({ ...f, why_this_works: e.target.value }))}
+          />
+        </div>
+        <div>
+          <Label htmlFor="perfect_for">Perfect if you… (one per line)</Label>
+          <textarea
+            id="perfect_for"
+            className="min-h-24 w-full rounded-lg border border-wtva-dark-300 bg-wtva-card px-3 py-2 text-sm"
+            value={form.perfect_for}
+            onChange={(e) => setForm((f) => ({ ...f, perfect_for: e.target.value }))}
+          />
+        </div>
+        <div>
+          <Label htmlFor="not_ideal_for">Not ideal if… (one per line)</Label>
+          <textarea
+            id="not_ideal_for"
+            className="min-h-24 w-full rounded-lg border border-wtva-dark-300 bg-wtva-card px-3 py-2 text-sm"
+            value={form.not_ideal_for}
+            onChange={(e) => setForm((f) => ({ ...f, not_ideal_for: e.target.value }))}
+          />
+        </div>
+        <div>
+          <Label htmlFor="vibe_tags">Vibe tags (comma-separated)</Label>
+          <Input
+            id="vibe_tags"
+            value={form.vibe_tags}
+            onChange={(e) => setForm((f) => ({ ...f, vibe_tags: e.target.value }))}
+            placeholder="Luxury, Rooftops, VIP"
+          />
+        </div>
+        <div>
+          <Label htmlFor="music_tags">Music tags (comma-separated)</Label>
+          <Input
+            id="music_tags"
+            value={form.music_tags}
+            onChange={(e) => setForm((f) => ({ ...f, music_tags: e.target.value }))}
+            placeholder="Hip-Hop, Afrobeats, R&B"
+          />
+        </div>
+        <div>
+          <Label htmlFor="diy">DIY compare price ($)</Label>
+          <Input
+            id="diy"
+            type="number"
+            min={0}
+            step="1"
+            value={form.diy_compare_dollars}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, diy_compare_dollars: e.target.value }))
+            }
+          />
+        </div>
+        <div>
+          <Label htmlFor="rating">Rating</Label>
+          <Input
+            id="rating"
+            type="number"
+            min={0}
+            max={5}
+            step="0.1"
+            value={form.rating}
+            onChange={(e) => setForm((f) => ({ ...f, rating: e.target.value }))}
+          />
+        </div>
+        <div>
+          <Label htmlFor="groups">Groups booked</Label>
+          <Input
+            id="groups"
+            type="number"
+            min={0}
+            value={form.groups_booked}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, groups_booked: e.target.value }))
+            }
+          />
+        </div>
+        <div>
+          <Label htmlFor="energy">Energy score</Label>
+          <Input
+            id="energy"
+            type="number"
+            min={0}
+            max={10}
+            step="0.1"
+            value={form.energy_score}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, energy_score: e.target.value }))
+            }
+          />
+        </div>
+        <div>
+          <Label htmlFor="travel">Travel minutes</Label>
+          <Input
+            id="travel"
+            type="number"
+            min={0}
+            value={form.travel_minutes}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, travel_minutes: e.target.value }))
+            }
+          />
+        </div>
+        <div>
+          <Label htmlFor="crowd">Crowd label</Label>
+          <Input
+            id="crowd"
+            value={form.crowd_label}
+            onChange={(e) => setForm((f) => ({ ...f, crowd_label: e.target.value }))}
+            placeholder="25–35"
+          />
+        </div>
         <div>
           <Label htmlFor="template">Template</Label>
           <select
@@ -222,7 +366,7 @@ export function NightPackageForm({
             checked={form.is_featured}
             onChange={(e) => setForm((f) => ({ ...f, is_featured: e.target.checked }))}
           />
-          Featured on Build Your Night
+          Featured / Trending on Curated Vibes
         </label>
       </div>
 

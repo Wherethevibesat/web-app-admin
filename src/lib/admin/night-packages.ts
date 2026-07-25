@@ -86,10 +86,37 @@ export async function getNightPackage(id: string): Promise<NightPackageRow | nul
 
 export async function upsertNightPackage(form: NightPackageFormData): Promise<string> {
   const admin = createAdminClient();
+  const splitList = (raw: string) =>
+    raw
+      .split(/[\n,]/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+  const diyDollars = Number(form.diy_compare_dollars);
+  const rating = Number(form.rating);
+  const groups = Number(form.groups_booked);
+  const energy = Number(form.energy_score);
+  const travel = Number(form.travel_minutes);
+
   const payload = {
     title: form.title.trim(),
     subtitle: form.subtitle.trim(),
     description: form.description.trim(),
+    tagline: form.tagline.trim(),
+    why_this_works: form.why_this_works.trim(),
+    perfect_for: splitList(form.perfect_for),
+    not_ideal_for: splitList(form.not_ideal_for),
+    diy_compare_cents:
+      Number.isFinite(diyDollars) && diyDollars > 0
+        ? Math.round(diyDollars * 100)
+        : null,
+    rating: Number.isFinite(rating) && rating > 0 ? rating : null,
+    groups_booked: Number.isFinite(groups) && groups > 0 ? Math.round(groups) : null,
+    vibe_tags: splitList(form.vibe_tags),
+    energy_score: Number.isFinite(energy) && energy > 0 ? energy : null,
+    travel_minutes: Number.isFinite(travel) && travel > 0 ? Math.round(travel) : null,
+    crowd_label: form.crowd_label.trim() || null,
+    music_tags: splitList(form.music_tags),
     template_key: form.template_key || "custom",
     city: form.city.trim() || "houston",
     image_url: form.image_url.trim() || null,
