@@ -318,6 +318,12 @@ export function NightPackageForm({
             <option value="published">Published</option>
             <option value="archived">Archived</option>
           </select>
+          {form.status === "published" && (
+            <p className="mt-1 text-xs text-amber-700">
+              Checkout is blocked until every stop venue has active Stripe Connect
+              (charges + payouts enabled).
+            </p>
+          )}
         </div>
         <div>
           <Label htmlFor="starts_on">Package date (optional)</Label>

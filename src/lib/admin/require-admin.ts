@@ -20,7 +20,13 @@ function inferPermissionFromCaller(): AdminPermission | null {
   if (segment === "messages") return "messages";
   if (segment === "users") return "users";
   if (segment === "neighborhoods") return "neighborhoods";
-  if (segment === "vip-packages" || segment === "night-packages") return "vip_packages";
+  if (
+    segment === "vip-packages" ||
+    segment === "night-packages" ||
+    segment === "vibe-payouts"
+  ) {
+    return "vip_packages";
+  }
   if (segment === "withdrawals") return "earnings";
   if (segment === "settings" || segment === "stripe") return "settings";
   if (segment === "verification") return "verification";

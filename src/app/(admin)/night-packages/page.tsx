@@ -3,14 +3,17 @@ import { PageHeader } from "@/components/admin/page-header";
 import { Button } from "@/components/ui/button";
 import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { listNightPackages, listPendingStopOffers } from "@/lib/admin/night-packages";
+import { listFailedVibePayouts } from "@/lib/admin/vibe-payouts";
 import { formatCents } from "@/lib/types/night-package";
 import { StopOfferReviewActions } from "@/components/admin/stop-offer-review-actions";
+import { VibePayoutRetryActions } from "@/components/admin/vibe-payout-retry-actions";
 
 export default async function NightPackagesPage() {
   await requireAdminPage("vip_packages");
-  const [packages, pending] = await Promise.all([
+  const [packages, pending, failedPayouts] = await Promise.all([
     listNightPackages().catch(() => []),
     listPendingStopOffers().catch(() => []),
+    listFailedVibePayouts().catch(() => []),
   ]);
 
   return (
@@ -23,6 +26,35 @@ export default async function NightPackagesPage() {
           <Button>New package</Button>
         </Link>
       </PageHeader>
+
+      {failedPayouts.length > 0 && (
+        <section className="mb-8 rounded-xl border border-red-300/40 bg-red-50/40 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-semibold">
+              Failed venue transfers ({failedPayouts.length})
+            </h2>
+            <VibePayoutRetryActions />
+          </div>
+          <ul className="mt-3 space-y-2">
+            {failedPayouts.map((stop) => (
+              <li
+                key={stop.id}
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-wtva-dark-300 bg-white px-3 py-2 text-sm"
+              >
+                <div>
+                  <p className="font-semibold">
+                    {stop.title ?? "Stop"} · {formatCents(stop.venue_payout_cents)}
+                  </p>
+                  <p className="text-wtva-muted">
+                    {stop.venue_name ?? stop.venue_id} · order {stop.order_id.slice(0, 8)}…
+                  </p>
+                </div>
+                <VibePayoutRetryActions orderId={stop.order_id} stopId={stop.id} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {pending.length > 0 && (
         <section className="mb-8 rounded-xl border border-amber-300/40 bg-amber-50/50 p-4">
