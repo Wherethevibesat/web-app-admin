@@ -15,7 +15,7 @@ import { redirect } from "next/navigation";
 const DESCRIPTIONS: Record<SettingsTabId, { title: string; description: string }> = {
   account: {
     title: "Settings",
-    description: "Your admin profile and password.",
+    description: "Your admin profile, email, and password.",
   },
   platform: {
     title: "Settings",

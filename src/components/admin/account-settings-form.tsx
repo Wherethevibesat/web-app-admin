@@ -1,19 +1,20 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
 
 export function AccountSettingsForm({
-  email,
+  email: initialEmail,
   fullName,
 }: {
   email: string;
   fullName: string;
 }) {
   const [name, setName] = useState(fullName);
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [email, setEmail] = useState(initialEmail);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [profileMsg, setProfileMsg] = useState<string | null>(null);
@@ -29,6 +30,13 @@ export function AccountSettingsForm({
     setProfileMsg(null);
     setProfileError(null);
 
+    const nextEmail = email.trim().toLowerCase();
+    if (!nextEmail || !nextEmail.includes("@")) {
+      setProfileError("Enter a valid email address.");
+      setSavingProfile(false);
+      return;
+    }
+
     const supabase = createClient();
     const {
       data: { user },
@@ -39,9 +47,26 @@ export function AccountSettingsForm({
       return;
     }
 
+    const emailChanged =
+      nextEmail !== (initialEmail || "").trim().toLowerCase();
+
+    if (emailChanged) {
+      const { error: authError } = await supabase.auth.updateUser({
+        email: nextEmail,
+      });
+      if (authError) {
+        setSavingProfile(false);
+        setProfileError(authError.message);
+        return;
+      }
+    }
+
     const { error } = await supabase
       .from("users")
-      .update({ name: name.trim() || "" })
+      .update({
+        name: name.trim() || "",
+        email: nextEmail,
+      })
       .eq("id", user.id);
 
     setSavingProfile(false);
@@ -49,7 +74,12 @@ export function AccountSettingsForm({
       setProfileError(error.message);
       return;
     }
-    setProfileMsg("Profile updated.");
+
+    setProfileMsg(
+      emailChanged
+        ? "Profile saved. Check your inbox to confirm the new email if prompted."
+        : "Profile updated.",
+    );
   }
 
   async function changePassword(e: React.FormEvent) {
@@ -65,24 +95,9 @@ export function AccountSettingsForm({
       setPasswordError("New passwords do not match.");
       return;
     }
-    if (!currentPassword) {
-      setPasswordError("Enter your current password.");
-      return;
-    }
 
     setSavingPassword(true);
     const supabase = createClient();
-
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password: currentPassword,
-    });
-    if (signInError) {
-      setSavingPassword(false);
-      setPasswordError("Current password is incorrect.");
-      return;
-    }
-
     const { error } = await supabase.auth.updateUser({ password: newPassword });
     setSavingPassword(false);
     if (error) {
@@ -90,7 +105,6 @@ export function AccountSettingsForm({
       return;
     }
 
-    setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
     setPasswordMsg("Password updated.");
@@ -100,7 +114,7 @@ export function AccountSettingsForm({
     <div className="w-full max-w-3xl space-y-6">
       <form
         onSubmit={saveProfile}
-        className="rounded-2xl border border-wtva-dark-300 bg-wtva-card p-6 shadow-sm"
+        className="rounded-2xl border border-wtva-dark-300 bg-white p-6 shadow-sm"
       >
         <h2 className="text-lg font-semibold tracking-tight">Profile</h2>
         <p className="mt-1 text-sm text-wtva-muted">
@@ -109,7 +123,16 @@ export function AccountSettingsForm({
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" value={email} disabled className="bg-wtva-dark-400" />
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <p className="mt-1 text-xs text-wtva-subtle">
+              Changing email may require confirming the new address from your inbox.
+            </p>
           </div>
           <div className="sm:col-span-2">
             <Label htmlFor="display_name">Display name</Label>
@@ -136,44 +159,32 @@ export function AccountSettingsForm({
 
       <form
         onSubmit={changePassword}
-        className="rounded-2xl border border-wtva-dark-300 bg-wtva-card p-6 shadow-sm"
+        className="rounded-2xl border border-wtva-dark-300 bg-white p-6 shadow-sm"
       >
         <h2 className="text-lg font-semibold tracking-tight">Password</h2>
         <p className="mt-1 text-sm text-wtva-muted">
-          Change the password you use to sign in to the admin portal.
+          Set a new password while signed in. No current password needed.
         </p>
-        <div className="mt-5 space-y-4">
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div>
-            <Label htmlFor="current_password">Current password</Label>
+            <Label htmlFor="new_password">New password</Label>
             <Input
-              id="current_password"
+              id="new_password"
               type="password"
-              autoComplete="current-password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
+              autoComplete="new-password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
             />
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <Label htmlFor="new_password">New password</Label>
-              <Input
-                id="new_password"
-                type="password"
-                autoComplete="new-password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="confirm_password">Confirm new password</Label>
-              <Input
-                id="confirm_password"
-                type="password"
-                autoComplete="new-password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
+          <div>
+            <Label htmlFor="confirm_password">Confirm new password</Label>
+            <Input
+              id="confirm_password"
+              type="password"
+              autoComplete="new-password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
           </div>
         </div>
         {passwordError && (
@@ -182,10 +193,16 @@ export function AccountSettingsForm({
         {passwordMsg && (
           <p className="mt-3 text-sm text-emerald-700">{passwordMsg}</p>
         )}
-        <div className="mt-5">
+        <div className="mt-5 flex flex-wrap items-center gap-4">
           <Button type="submit" disabled={savingPassword}>
             {savingPassword ? "Updating…" : "Update password"}
           </Button>
+          <Link
+            href="/auth/reset"
+            className="text-sm font-medium text-accent underline-offset-2 hover:underline"
+          >
+            Forgot password? Email a reset link
+          </Link>
         </div>
       </form>
     </div>
