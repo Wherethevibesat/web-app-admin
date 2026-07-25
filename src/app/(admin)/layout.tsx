@@ -43,12 +43,14 @@ export default async function AdminLayout({
 
   return (
     <AdminShell>
-      <div className="flex min-h-screen items-stretch">
+      <div className="flex min-h-screen items-stretch bg-background">
         <AdminSidebar permissions={permissions} />
-        <div className="flex min-w-0 flex-1 flex-col bg-background">
+        <div className="flex min-w-0 flex-1 flex-col bg-wtva-card">
           <AdminTopbar name={displayName} email={email} />
-          <main className="min-w-0 flex-1">
-            <div className="w-full max-w-none p-6 lg:p-8">{children}</div>
+          <main className="min-w-0 flex-1 bg-wtva-card">
+            <div className="w-full max-w-none p-6 lg:p-8 text-foreground">
+              {children}
+            </div>
           </main>
         </div>
       </div>
