@@ -71,8 +71,13 @@ export function AdminSidebar({ permissions }: { permissions: string[] }) {
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const allowed = new Set(permissions);
+  // Settings always shows — Account (password/profile) is for every admin.
+  // Platform/Payments tabs inside still require the settings permission.
   const visibleItems = navItems.filter(
-    (item) => allowed.has("all") || allowed.has(item.permission),
+    (item) =>
+      item.href === "/settings" ||
+      allowed.has("all") ||
+      allowed.has(item.permission),
   );
 
   async function handleSignOut() {
