@@ -18,7 +18,7 @@ const cards = [
 
 export function PaymentsSettingsPanel() {
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="w-full space-y-6">
       <div className="rounded-2xl border border-wtva-dark-300 bg-wtva-card p-6 shadow-sm">
         <div className="flex items-start gap-3">
           <div className="rounded-xl bg-accent/10 p-2.5 text-accent">

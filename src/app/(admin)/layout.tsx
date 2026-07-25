@@ -48,7 +48,7 @@ export default async function AdminLayout({
         <div className="flex min-w-0 flex-1 flex-col bg-background">
           <AdminTopbar name={displayName} email={email} />
           <main className="min-w-0 flex-1">
-            <div className="mx-auto max-w-7xl p-6 lg:p-8">{children}</div>
+            <div className="w-full max-w-none p-6 lg:p-8">{children}</div>
           </main>
         </div>
       </div>
