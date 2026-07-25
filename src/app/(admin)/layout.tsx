@@ -36,9 +36,9 @@ export default async function AdminLayout({
 
   return (
     <AdminShell>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen items-stretch">
         <AdminSidebar permissions={permissions} />
-        <main className="min-h-screen flex-1 overflow-y-auto bg-background">
+        <main className="min-w-0 flex-1 bg-background">
           <div className="mx-auto max-w-7xl p-6 lg:p-8">{children}</div>
         </main>
       </div>

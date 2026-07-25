@@ -90,13 +90,13 @@ export function AdminSidebar({ permissions }: { permissions: string[] }) {
   return (
     <aside
       className={cn(
-        "flex h-screen flex-col border-r border-wtva-dark-300 bg-white shadow-sm transition-all",
+        "flex min-h-screen shrink-0 flex-col border-r border-wtva-dark-300 bg-white shadow-sm transition-all",
         collapsed ? "w-[72px]" : "w-64",
       )}
     >
       <div
         className={cn(
-          "border-b border-wtva-dark-300 px-3 py-4",
+          "border-b border-wtva-dark-300 px-3 py-3",
           collapsed ? "flex flex-col items-center gap-1" : "flex items-center justify-between gap-2",
         )}
       >
@@ -108,16 +108,16 @@ export function AdminSidebar({ permissions }: { permissions: string[] }) {
               width={1024}
               height={493}
               priority
-              className="h-10 w-10 object-cover object-left mix-blend-multiply"
+              className="h-9 w-9 object-cover object-left mix-blend-multiply"
             />
           </Link>
         ) : (
-          <BrandLogo href="/" label="Admin" heightClass="h-10" className="min-w-0" />
+          <BrandLogo href="/" label="Admin" heightClass="h-9" className="min-w-0" />
         )}
         <button
           type="button"
           onClick={() => setCollapsed((c) => !c)}
-          className="shrink-0 rounded-lg p-2 text-wtva-muted hover:bg-wtva-dark-300 hover:text-foreground"
+          className="shrink-0 rounded-lg p-1.5 text-wtva-muted hover:bg-wtva-dark-300 hover:text-foreground"
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? (
@@ -128,7 +128,7 @@ export function AdminSidebar({ permissions }: { permissions: string[] }) {
         </button>
       </div>
 
-      <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+      <nav className="flex flex-col gap-0.5 p-2">
         {visibleItems.map(({ href, label, icon: Icon }) => {
           const active = isNavItemActive(pathname, href);
           return (
@@ -137,26 +137,26 @@ export function AdminSidebar({ permissions }: { permissions: string[] }) {
               href={href}
               title={collapsed ? label : undefined}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors",
                 active
                   ? "bg-accent-gradient text-white shadow-accent"
                   : "text-wtva-muted hover:bg-wtva-dark-300 hover:text-foreground",
               )}
             >
-              <Icon className="h-5 w-5 shrink-0" />
+              <Icon className="h-4 w-4 shrink-0" />
               {!collapsed && <span>{label}</span>}
             </Link>
           );
         })}
       </nav>
 
-      <div className="border-t border-wtva-dark-300 p-3">
+      <div className="mt-auto border-t border-wtva-dark-300 p-2">
         <button
           type="button"
           onClick={handleSignOut}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-wtva-muted hover:bg-wtva-dark-300 hover:text-foreground"
+          className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-wtva-muted hover:bg-wtva-dark-300 hover:text-foreground"
         >
-          <LogOut className="h-5 w-5 shrink-0" />
+          <LogOut className="h-4 w-4 shrink-0" />
           {!collapsed && <span>Sign out</span>}
         </button>
       </div>
