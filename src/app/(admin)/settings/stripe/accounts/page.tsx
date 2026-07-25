@@ -1,19 +1,16 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/admin/page-header";
-import { Badge } from "@/components/ui/badge";
-import {
-  DataTable,
-  DataTableBody,
-  DataTableCell,
-  DataTableHead,
-  DataTableHeaderCell,
-  DataTableRow,
-} from "@/components/admin/data-table";
+import { StripeAccountsTable } from "@/components/admin/stripe-accounts-table";
 import { requireAdminPage } from "@/lib/admin/require-admin-page";
 import { listStripeAccounts } from "@/lib/admin/stripe";
 
-export default async function StripeAccountsPage() {
+export default async function StripeAccountsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ stripe?: string }>;
+}) {
   await requireAdminPage("settings");
+  const { stripe } = await searchParams;
   let accounts: Awaited<ReturnType<typeof listStripeAccounts>> = [];
   let error: string | null = null;
 
@@ -30,7 +27,7 @@ export default async function StripeAccountsPage() {
     <div>
       <PageHeader
         title="Stripe connected accounts"
-        description="Connect accounts from the mobile app or Stripe Dashboard."
+        description="Connect, finish onboarding, or disconnect venue payout accounts."
       >
         <div className="flex gap-4 text-sm">
           <Link
@@ -45,37 +42,27 @@ export default async function StripeAccountsPage() {
         </div>
       </PageHeader>
 
-      {error && <p className="mb-4 text-amber-400">{error}</p>}
+      {stripe === "return" && (
+        <p className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+          Returned from Stripe. Refresh if status still shows pending — it can take a
+          moment to update.
+        </p>
+      )}
+      {stripe === "refresh" && (
+        <p className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+          Onboarding link expired. Use Continue setup on the account to try again.
+        </p>
+      )}
+
+      {error && <p className="mb-4 text-sm text-amber-700">{error}</p>}
 
       {accounts.length === 0 && !error ? (
-        <p className="text-wtva-muted">No connected accounts yet.</p>
+        <p className="text-wtva-muted">
+          No connected accounts yet. Venue owners can connect from the business portal,
+          or you can reconnect after they appear here.
+        </p>
       ) : (
-        <DataTable>
-          <DataTableHead>
-            <tr>
-              <DataTableHeaderCell>Name</DataTableHeaderCell>
-              <DataTableHeaderCell>Email</DataTableHeaderCell>
-              <DataTableHeaderCell>Last4</DataTableHeaderCell>
-              <DataTableHeaderCell>Status</DataTableHeaderCell>
-              <DataTableHeaderCell>Default</DataTableHeaderCell>
-            </tr>
-          </DataTableHead>
-          <DataTableBody>
-            {accounts.map((a) => (
-              <DataTableRow key={a.id}>
-                <DataTableCell className="font-medium">{a.account_name}</DataTableCell>
-                <DataTableCell>{a.email ?? "—"}</DataTableCell>
-                <DataTableCell>{a.last4 ? `•••• ${a.last4}` : "—"}</DataTableCell>
-                <DataTableCell>
-                  <Badge variant={a.status === "active" ? "success" : "default"}>
-                    {a.status ?? "—"}
-                  </Badge>
-                </DataTableCell>
-                <DataTableCell>{a.is_default ? "Yes" : "—"}</DataTableCell>
-              </DataTableRow>
-            ))}
-          </DataTableBody>
-        </DataTable>
+        <StripeAccountsTable accounts={accounts} />
       )}
     </div>
   );
