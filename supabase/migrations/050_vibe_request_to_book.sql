@@ -44,19 +44,9 @@ ALTER TABLE public.night_package_order_stops
   ADD COLUMN IF NOT EXISTS venue_responded_at TIMESTAMPTZ;
 
 -- Venue owners can read orders that include their stops (for date/party/status).
-DROP POLICY IF EXISTS night_package_orders_select_venue ON public.night_package_orders;
-CREATE POLICY night_package_orders_select_venue
-  ON public.night_package_orders FOR SELECT
-  TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1
-      FROM public.night_package_order_stops s
-      JOIN public.venues v ON v.id = s.venue_id
-      WHERE s.order_id = night_package_orders.id
-        AND v.owner_id = auth.uid()
-    )
-  );
+-- NOTE: Do not subquery night_package_order_stops here under RLS — that recurses
+-- with night_package_order_stops_select. Migration 051 installs SECURITY DEFINER
+-- helpers and the safe venue SELECT policy.
 
 -- PII-safe summary: guest contact only after venues confirmed / paid.
 CREATE OR REPLACE VIEW public.vibe_venue_order_summary
