@@ -42,6 +42,7 @@ export interface EventRow {
   starts_at: string;
   ends_at: string | null;
   image_url: string | null;
+  ticket_url?: string | null;
   status: string;
   featured: boolean | null;
   homepage_featured: boolean;

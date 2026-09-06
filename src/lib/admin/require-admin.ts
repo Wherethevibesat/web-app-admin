@@ -13,7 +13,7 @@ function inferPermissionFromCaller(): AdminPermission | null {
   if (!segment) return null;
 
   if (segment === "venues") return "venues";
-  if (segment === "events") return "events";
+  if (segment === "events" || segment === "guides") return "events";
   if (segment === "drivers") return "drivers";
   if (segment === "promoter-links" || segment === "promoter-events") return "promoters";
   if (segment === "customers") return "customers";

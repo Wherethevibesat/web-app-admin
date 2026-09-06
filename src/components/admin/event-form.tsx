@@ -48,6 +48,7 @@ function toForm(event?: EventRow | null, ticketTiers?: TicketTierInput[]): Event
     starts_at: starts,
     ends_at: toLocalDatetime(event?.ends_at) || toLocalDatetime(startDate.toISOString()),
     image_url: event?.image_url ?? "",
+    ticket_url: event?.ticket_url ?? "",
     status: (event?.status as EventFormData["status"]) ?? "pending_review",
     featured: event?.featured ?? false,
     homepage_featured: event?.homepage_featured ?? false,
@@ -257,6 +258,16 @@ export function EventForm({
         <Textarea id="description" rows={4} value={form.description} onChange={(e) => update("description", e.target.value)} />
       </div>
 
+      <div>
+        <Label htmlFor="ticket_url">RSVP / ticket link</Label>
+        <Input
+          id="ticket_url"
+          type="url"
+          placeholder="https://eventbrite.com/e/..."
+          value={form.ticket_url}
+          onChange={(e) => update("ticket_url", e.target.value)}
+        />
+      </div>
       <EventImageUpload value={form.image_url} onChange={(image_url) => update("image_url", image_url)} />
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={form.featured} onChange={(e) => update("featured", e.target.checked)} />

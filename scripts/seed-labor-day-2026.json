@@ -1,0 +1,172 @@
+{
+  "guide": {
+    "slug": "labor-day-weekend-2026",
+    "title": "Labor Day Weekend in Houston",
+    "subtitle": "WTVA Events picked the official Labor Day weekend lineup — day parties, all-white nights, and Monday socials. RSVP links go to Eventbrite, Posh, and venue pages.",
+    "city": "houston",
+    "starts_on": "2026-09-04",
+    "ends_on": "2026-09-07",
+    "posted_by_name": "WTVA Events",
+    "published": true,
+    "featured_on_homepage": true
+  },
+  "venues": [
+    {
+      "id": "melrose",
+      "name": "Melrose",
+      "slugKey": "melrose",
+      "address": "2517 Ralph St, Houston, TX 77006",
+      "neighborhood": "Montrose",
+      "phone": "",
+      "venue_type": "Lounge",
+      "website_url": "https://www.melrosehtx.com/",
+      "instagram_url": "https://www.instagram.com/melrosehtx/"
+    },
+    {
+      "id": "around-the-corner",
+      "name": "Around the Corner",
+      "slugKey": "around-the-corner",
+      "address": "1510 Hutchins St, Houston, TX 77003",
+      "neighborhood": "EaDo (East Downtown)",
+      "phone": "(281) 888-9806",
+      "venue_type": "Restaurant",
+      "website_url": "https://www.aroundthecornerhouston.com/",
+      "instagram_url": "https://www.instagram.com/aroundthecornerhtx/"
+    },
+    {
+      "id": "velvet-rail",
+      "name": "Velvet Rail",
+      "slugKey": "velvet-rail",
+      "address": "505 Main St, Houston, TX 77002",
+      "neighborhood": "Downtown",
+      "phone": "713.927.7830",
+      "venue_type": "Lounge",
+      "website_url": "https://velvetrailhtx.com",
+      "instagram_url": "https://www.instagram.com/velvetrailhtx/"
+    }
+  ],
+  "events": [
+    {
+      "title": "The Friday Exchange",
+      "venueSlugKey": "reset",
+      "date": "2026-09-04",
+      "startTime": "21:00",
+      "endTime": "02:00",
+      "event_type": "Night Party",
+      "ticket_url": "https://www.eventbrite.com/e/the-friday-exchange-at-reset-rooftop-tickets-1985883492986",
+      "imageFile": "friday-exchange.jpg",
+      "description": "Mature Friday night at RESET Rooftop Lounge in Midtown. Hosted by Janky Joe, A Few Good Men, and inDmix. Food, hookah, and bottle service. 606 Dennis St, Suite 200. No cover with RSVP."
+    },
+    {
+      "title": "F.R.E.S.H Saturdays",
+      "venueSlugKey": "styx-stone",
+      "date": "2026-09-05",
+      "startTime": "15:00",
+      "endTime": "23:00",
+      "event_type": "Day Party",
+      "ticket_url": "https://freshsaturdays.eventbrite.com",
+      "imageFile": "fresh-saturdays.jpg",
+      "description": "FRESH Saturdays Labor Day DJ Showcase at STYX + STONE. Birthday celebration for DJ J Que and DJ GT. Sounds by MC Kane, J Que, GT, Youngstreetz, Shante, Dee Wreck, T Gray, and Mei Indmix. Three levels, indoor and outdoor, food on the patio. 2400 Brazos St. 3pm–11pm. RSVP at freshsaturdays.eventbrite.com. Infoline 713.459.9019."
+    },
+    {
+      "title": "FAM JAM: Labor Day Weekend",
+      "venueSlugKey": "around-the-corner",
+      "date": "2026-09-05",
+      "startTime": "18:00",
+      "endTime": "23:00",
+      "event_type": "Day Party",
+      "ticket_url": "https://posh.vip/e/fam-jam-labor-day-weekend",
+      "imageFile": "fam-jam.jpg",
+      "description": "FAM JAM Labor Day Weekend at Around the Corner. Sounds by DJ Mr Rogers and Saynt Chris. 1510 Hutchins St, EaDo. Tickets from $22.99 on Posh."
+    },
+    {
+      "title": "NOIR — Labor Day Weekend Exclusive",
+      "venueSlugKey": null,
+      "date": "2026-09-05",
+      "startTime": "22:00",
+      "endTime": "02:00",
+      "event_type": "Private Event",
+      "neighborhood": "Houston",
+      "ticket_url": "https://indmix.com",
+      "imageFile": "noir.jpg",
+      "description": "Invite-only Labor Day weekend exclusive presented by ALIFE, Brandon Latigue, and inDmix. Houston’s DJ Dee Wreck and Miami’s DJ Efeezy. Venue revealed to invited guests."
+    },
+    {
+      "title": "Chapman Sundays — Labor Day Weekend",
+      "venueSlugKey": "chapman-kirby",
+      "date": "2026-09-06",
+      "startTime": "12:00",
+      "endTime": "22:00",
+      "event_type": "Day Party",
+      "ticket_url": "https://chapmansundays.com",
+      "imageFile": "chapman-sundays.jpg",
+      "description": "Chapman Sundays Labor Day Weekend at Chapman & Kirby — the nation’s #1 Sunday Funday. Sounds by DJ E Feezy, DJ Mr. Rogers, Hi-C, JQue, GT, and BLove. 2118 Lamar St. Tables: 713.259.5725. RSVP at chapmansundays.com."
+    },
+    {
+      "title": "Supreme Sundays",
+      "venueSlugKey": "pour-behavior",
+      "date": "2026-09-06",
+      "startTime": "15:00",
+      "endTime": "02:00",
+      "event_type": "Day Party",
+      "ticket_url": "https://supremesundays.com",
+      "imageFile": "supreme-sundays.jpg",
+      "description": "Supreme Sundays late brunch and day party at Pour Behavior. Jr Martins birthday celebration. Brunch 3–6pm, day party and Sunday Funday from 5pm until late. Presented by ALIFE, A Few Good Men, Janky Joe, Brandon Latigue, and inDmix. 2211 Travis St. Reserve at supremesundays.com."
+    },
+    {
+      "title": "Night Cap Sundays at STYX + STONE",
+      "venueSlugKey": "styx-stone",
+      "date": "2026-09-06",
+      "startTime": "19:00",
+      "endTime": "02:00",
+      "event_type": "Night Party",
+      "ticket_url": "https://posh.vip/e/night-cap-sundays-at-styx-stone-7pm2am-2026-9-7-7-0",
+      "imageFile": "night-cap-sundays.jpg",
+      "description": "Night Cap Sundays — Houston’s Sunday Funday finale and Labor Day party at STYX + STONE. Presented by Lil Keith, FlyGuyHouston, Vibe Specialist, and Toxic Meech. Sounds by MC Major, DJ Mr Rogers, and DJ Ikew. 2400 Brazos St. 7pm–2am. Info: 832.330.6800 or 832.577.7501."
+    },
+    {
+      "title": "Labor Day All White Affair",
+      "venueSlugKey": "ciel",
+      "date": "2026-09-06",
+      "startTime": "21:00",
+      "endTime": "02:00",
+      "event_type": "Upscale",
+      "ticket_url": "https://www.eventbrite.com/e/labor-day-all-white-at-ciel-tickets-1998993979805",
+      "imageFile": "all-white-ciel.jpg",
+      "description": "Marcus Johnson, Steve Rogers, Tay Mitch, and inDmix present Labor Day All White Affair at CIÉL. All-white dress code. 4411 San Felipe St, Suite 101, River Oaks. RSVP for no cover. Infoline 713.459.9019."
+    },
+    {
+      "title": "Sunday Funday at Bar 5015 — Labor Day Edition",
+      "venueSlugKey": "5015",
+      "date": "2026-09-06",
+      "startTime": "16:00",
+      "endTime": "01:00",
+      "event_type": "Day Party",
+      "ticket_url": "https://www.eventbrite.com/e/sunday-funday-brunch-daytime-party-at-5015-on-almeda-tickets-1986843043026",
+      "imageFile": "bar-5015-sunday.jpg",
+      "description": "Sunday Funday at Bar 5015. All roads lead to Almeda. 4pm–1am, no cover. DJs Shante, Auditory, Q Holic, and Wreck. 5015 Almeda Road."
+    },
+    {
+      "title": "The Epilogue at Velvet Rail",
+      "venueSlugKey": "velvet-rail",
+      "date": "2026-09-06",
+      "startTime": "21:00",
+      "endTime": "02:00",
+      "event_type": "Upscale",
+      "ticket_url": "https://velvetrailhtx.com",
+      "imageFile": "velvet-rail-epilogue.jpg",
+      "description": "The Epilogue — Labor Day Weekend Sunday night finale at Velvet Rail. Curated sounds by DJ Mr. Rogers. Cocktail chic. Complimentary entry before 11pm with RSVP. Private seating: 713.927.7830 or 832.283.8554. 505 Main Street."
+    },
+    {
+      "title": "Melrose Labor Day Monday Social",
+      "venueSlugKey": "melrose",
+      "date": "2026-09-07",
+      "startTime": "16:00",
+      "endTime": "00:00",
+      "event_type": "Day Party",
+      "ticket_url": "https://www.eventbrite.com/e/melrose-labor-day-monday-social-tickets-1998505321214",
+      "imageFile": "melrose-monday.jpg",
+      "description": "ALIFE, A Few Good Men, Janky Joe, Brandon Latigue, and inDmix present Labor Day Monday Social at Melrose. Day and night, 4pm–12am. 2517 Ralph St. RSVP for no cover at MelroseMonday.eventbrite.com. Infoline 713.459.9019."
+    }
+  ]
+}

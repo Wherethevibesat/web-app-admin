@@ -37,6 +37,7 @@ export interface EventFormData {
   starts_at: string;
   ends_at: string;
   image_url: string;
+  ticket_url: string;
   status: "draft" | "pending_review" | "published" | "cancelled";
   featured: boolean;
   homepage_featured: boolean;
