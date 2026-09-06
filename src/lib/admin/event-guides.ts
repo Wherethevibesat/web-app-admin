@@ -55,7 +55,7 @@ export async function getEventGuide(id: string): Promise<{
 
   return {
     guide: data as EventGuideRow,
-    items: (items ?? []) as EventGuideItemRow[],
+    items: (items ?? []) as unknown as EventGuideItemRow[],
   };
 }
 
